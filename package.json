@@ -1,0 +1,11 @@
+{
+    "name": "hoedown",
+    "version": "1.00.00",
+    "private": true,
+    "devDependencies": {
+        "cucumber": "latest"
+    },
+    "engines": {
+        "node": ">= 0.8.0"
+    }
+}
