@@ -1,6 +1,7 @@
 'use strict';
 var Cucumber = require('cucumber');
 var fs = require('fs');
+var features;
 var files = fs.readdirSync(__dirname + '/features').filter(function(file) {
     return (file.indexOf('.feature') >= 0);
 });
@@ -24,5 +25,20 @@ runtime.start(function(succeeded) {
         clearTimeout(timeoutId);
     }
 });
-var feats = runtime.getFeatures();
-console.log(feats.getFeatures().getAtIndex(1).getLine());
+
+features = runtime.getFeatures().getFeatures();
+
+features.syncForEach(function(feature) {
+    var scenarios = feature.getFeatures();
+    scenarios.syncForEach(function(scenario, i) {
+        console.log('Scenario: ' + i);
+        console.log(scenario.getName());
+        scenario.getSteps().syncForEach(function(step) {
+            console.log(step.getName());
+            if (step.hasDataTable()) {
+                var table = step.getDataTable().getRows();
+                console.log(table.getAtIndex(0).getResult());
+            }
+        });
+    });
+});

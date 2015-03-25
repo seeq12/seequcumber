@@ -7,6 +7,6 @@
     },
     "dependencies": {},
     "devDependencies": {
-        "seeq12/cucumber-js": "^0.4.1"
+        "cucumber-js": "git+https://github.com/seeq12/cucumber-js.git"
     }
 }
