@@ -1,5 +1,7 @@
 'use strict';
 var Cucumber = require('cucumber');
+var TestResults = require('./testResults');
+var Serializer = require('./serializer')
 var fs = require('fs');
 var features;
 var files = fs.readdirSync(__dirname + '/features').filter(function(file) {
@@ -28,17 +30,17 @@ runtime.start(function(succeeded) {
 
 features = runtime.getFeatures().getFeatures();
 
-features.syncForEach(function(feature) {
+features.syncForEach(function(feature, index) {
     var scenarios = feature.getFeatures();
-    scenarios.syncForEach(function(scenario, i) {
-        console.log('Scenario: ' + i);
-        console.log(scenario.getName());
+    var fileName = files[index].split('.')[0] + '_new.feature';
+    scenarios.syncForEach(function(scenario) {
         scenario.getSteps().syncForEach(function(step) {
-            console.log(step.getName());
             if (step.hasDataTable()) {
-                var table = step.getDataTable().getRows();
-                console.log(table.getAtIndex(0).getResult());
+                var table = new TestResults(step.getDataTable());
+                step.attachTestResults(table);
             }
         });
     });
+    var serTest = new Serializer(feature, fileName);
+    serTest.write();
 });

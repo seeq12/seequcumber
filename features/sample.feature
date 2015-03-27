@@ -4,7 +4,7 @@ Feature: Install Seeq software
   so that I can run the software.
 
   @manual
-  Background:
+  Background: 
     Given that I'm using a clean machine
     And I have downloaded the Seeq installer
  
