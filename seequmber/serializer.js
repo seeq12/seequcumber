@@ -1,7 +1,6 @@
 'use strict';
 
 function Serializer(feature, fileName) {
-    var Cucumber = require('cucumber');
     var fs = require('fs');
     var getTag = function(tags, lineNumber) {
         var outputString = '';
@@ -136,7 +135,7 @@ function Serializer(feature, fileName) {
             var tags = [];
             if (element.getTags) {
                 tags = element.getTags();
-                outputString += tab(tabNum) + getTag(tags, element.getLine())
+                outputString += tab(tabNum) + getTag(tags, element.getLine());
             }
             outputString += tab(tabNum) + element.getKeyword() + ': ' + element.getName();
             return outputString;
