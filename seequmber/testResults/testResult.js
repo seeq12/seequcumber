@@ -15,7 +15,7 @@ function TestResult(result, version, user, defects) {
             return result;
         },
 
-        gerVersion: function gerVersion() {
+        getVersion: function getVersion() {
             return version;
         },
 
