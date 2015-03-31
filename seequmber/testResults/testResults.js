@@ -32,6 +32,13 @@ function TestResults(dataTable) {
         },
         getMaximums: function getMaximums() {
             return maximums;
+        },
+        raw: function raw() {
+            var rawTests = [];
+            testCollection.syncForEach(function(test) {
+                rawTests.push(test.raw());
+            });
+            return rawTests;
         }
     };
     return self;
