@@ -5,7 +5,6 @@
     "scripts": {
         "test": "./node_modules/.bin/cucumber.js"
     },
-    "dependencies": {},
     "devDependencies": {
         "cucumber-js": "git+https://github.com/seeq12/cucumber-js.git"
     }
