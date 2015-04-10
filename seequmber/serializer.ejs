@@ -38,6 +38,7 @@
            .list-group-item {
             padding-top: 0px;
             padding-bottom: 0px;
+            padding-right: 0px;
             border-top: 0px;
             border-bottom: 0px;
             border-right: 0px;
@@ -57,12 +58,15 @@
             padding-bottom: 10px !important;
           }
            .itemContainer {
-            border-left: 0px !important;
+            /*border-left: 0px !important;*/
           }
            .featureContainer {
             border-bottom: 1px !important;
             border-right: 1px !important;
             border-left: 1px !important;
+          }
+           .test {
+            padding-right: 15px !important;
           }
         </style>
     </head>
@@ -106,8 +110,8 @@ function write() {
 %>
                 <li class=<%=getClass("list-group-item feature", pass)%>>
                     <div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
-                        <%=writeFirstLine(feature)%>
                         <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
+                        <%=writeFirstLine(feature)%>
                     </div>
                 </li>
                 <li class="list-group-item featureContainer" id= <%=getID(id + '-container')%> >
@@ -153,8 +157,8 @@ function writeBackground(background, i) {
     var id = i + '-background';
 %>
                             <li class="list-group-item background"><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
-                                <%=writeFirstLine(background)%>
                                 <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
+                                <%=writeFirstLine(background)%>
                             </div></li>
 
 <%
@@ -188,8 +192,8 @@ function writeScenario(scenario, htmlOut, id) {
             if (htmlOut){
 %>
                             <li class=<%=getClass("list-group-item scenario", pass)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
-                                <%=writeFirstLine(scenario)%>
                                 <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
+                                <%=writeFirstLine(scenario)%>
                             </div></li>
 <%
                 checkForDescription(scenario);
@@ -230,16 +234,18 @@ function writeStep(step, back, htmlOut, id) {
         } else {
 %>
                                         <li class=<%=getClass("list-group-item step", pass)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id=<%=getID(id)%> >
+<%
+            if (step.hasAttachment()) {
+%>
+                                            <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
 <%      
+            }
         }
 %>
                                             <%=firstLine%>
-<%
-        if (step.hasAttachment()) { 
-%>
-                                            <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
                                         </div></li>
 <%
+        if (step.hasAttachment()) { 
             if (step.hasTestResults()) {
 %>
                                         <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
@@ -274,10 +280,6 @@ function writeStep(step, back, htmlOut, id) {
                                                 </ul>
                                             </div>
                                         </li>
-<%
-        } else {
-%>
-                                        </div></li>
 <%
         }
     }

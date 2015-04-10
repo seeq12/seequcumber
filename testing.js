@@ -4,7 +4,7 @@ var Deserializer = require('./seequmber/deserializer');
 var fs = require('fs');
 var ejs = require('ejs');
 var path = require('path');
-var ejsString = fs.readFileSync('./seequmber/serializer_div.ejs').toString();
+var ejsString = fs.readFileSync('./seequmber/serializer.ejs').toString();
 var rootDirectory = __dirname + '/../crab/behavior/features/';
 var directories = fs.readdirSync(rootDirectory).filter(function(file) {
     return fs.statSync(path.join(rootDirectory, file)).isDirectory();
