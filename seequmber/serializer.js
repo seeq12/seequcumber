@@ -141,9 +141,6 @@ function Serializer(feature, fileName) {
             }
             outputString += tab(tabNum) + element.getKeyword() + ': ' + element.getName();
             return outputString;
-        },
-        getEJS: function getEJS() {
-            return fs.readFileSync('serializer.ejs').toString();
         }
     };
     return self;
