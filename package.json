@@ -11,7 +11,7 @@
         "type": "git",
         "url": "git://github.com/seeq12/barrow.git"
     },
-    "devDependencies": {
+    "dependencies": {
         "cucumber-js": "git+https://github.com/seeq12/cucumber-js.git"
     },
     "author": "Nikhil Joy <nikhil.joy@seeq.com>"
