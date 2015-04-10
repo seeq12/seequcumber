@@ -2,10 +2,17 @@
     "name": "barrow",
     "version": "0.0.1",
     "private": true,
+    "description": "A library that serailizes and deserializes feature files",
+    "main": "barrow.js",
     "scripts": {
         "test": "./node_modules/.bin/cucumber.js"
     },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/seeq12/barrow.git"
+    },
     "devDependencies": {
         "cucumber-js": "git+https://github.com/seeq12/cucumber-js.git"
-    }
+    },
+    "author": "Nikhil Joy <nikhil.joy@seeq.com>"
 }
