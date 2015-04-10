@@ -26,7 +26,8 @@ function Serializer(feature, fileName) {
         write: function write() {
             var outputString = '';
             var tabNum = 0;
-            outputString += self.writeFirstLine(feature, tabNum) + '\n' + self.checkForDescription(feature, tabNum + 1) + self.checkForBackground(feature, tabNum + 1);
+            outputString += self.writeFirstLine(feature, tabNum) + '\n' + self.checkForDescription(feature, tabNum + 1) +
+                self.checkForBackground(feature, tabNum + 1);
             var scenarios = feature.getFeatures();
             scenarios.syncForEach(function(scenario) {
                 outputString += self.writeScenario(scenario, tabNum + 1);
@@ -51,7 +52,8 @@ function Serializer(feature, fileName) {
         writeBackground: function writeBackground(background, tabNum) {
             var outputString = '';
             var steps = background.getSteps();
-            outputString += self.writeFirstLine(background, tabNum) + '\n' + self.checkForDescription(background, tabNum + 1);
+            outputString += self.writeFirstLine(background, tabNum) + '\n' + self.checkForDescription(background, tabNum +
+                1);
             steps.syncForEach(function(step) {
                 outputString += self.writeStep(step, tabNum + 1);
             });
@@ -139,6 +141,9 @@ function Serializer(feature, fileName) {
             }
             outputString += tab(tabNum) + element.getKeyword() + ': ' + element.getName();
             return outputString;
+        },
+        getEJS: function getEJS() {
+            return fs.readFileSync('serializer.ejs').toString();
         }
     };
     return self;
