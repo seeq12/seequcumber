@@ -1,4 +1,4 @@
-Feature: Install Seeq software
+Feature: Install Seeq software on a Windows machine
   As a user
   I want to install Seeq software on my Windows machine
   so that I can run the software.
@@ -11,6 +11,7 @@ Feature: Install Seeq software
   @manual
   Scenario: Executable Certificate
     When I double-click on the installer executable in Windows Explorer
+      | PASS    | 0.14.02.201412020843 | Mark Derbecker |            |
     Then Windows reports that the executable is properly signed
       # Note:
       #   If this is an unsigned pre-release version or the .exe is not properly signed, Windows
@@ -22,6 +23,7 @@ Feature: Install Seeq software
   @manual
   Scenario: Installation Wizard
     When I launch the Seeq installer
+      | PASS    | 0.14.02.201412020843 | Mark Derbecker |            |
     Then the Seeq splash screen appears
       | PASS    | 0.14.02.201412020843 | Mark Derbecker |            |
     And a License Agreement appears

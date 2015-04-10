@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+    <style>
+      body {
+        font-family: Lato, sans-serif;
+        color: #395a6b;
+      }
+      table {
+        width: 60em;
+      }
+      table, tr, th, td {
+        text-align: left;
+        border: 0px;
+        border-collapse: collapse;
+        margin: 0px;
+        padding: 5px;
+      }
+      .pass {
+        background-color: #DDFFDD;
+      }
+      .fail {
+        background-color: #FFDDDD;
+      }
+      .skipped {
+        background-color: #FFFFDD;
+      }
+    </style>
+    </head>
+
+    <body>
+        <table border=1>
+<%
+var feature = data;
+
+var getTag = function(tags, lineNumber) {
+    var exists = false;
+    tags.forEach(function(tag) {
+        if (tag.getLine() + 1 === lineNumber) {
+            if (tag.getName() === '@manual') {
+                exists = true;
+            }
+        }
+    });
+    return exists;
+};
+
+function write() {
+    var pass = true;
+    var scenarios = feature.getFeatures();
+    scenarios.syncForEach(function(scenario) {
+        pass = (pass && writeScenario(scenario, false));
+    });
+%>
+        <tr class= <%= (pass) ? "\"pass\"" : "\"fail\"" %> >
+            <td colspan=6><%= writeFirstLine(feature) %></td>
+        </tr>
+<%
+    checkForDescription(feature);
+    checkForBackground(feature);
+    scenarios.syncForEach(function(scenario) {
+        writeScenario(scenario, true);
+        emptyRow();
+    });
+}
+
+function writeDescription(description) {
+    var lines = description.split('\n');
+%>
+        <tr>
+            <td colspan=6>
+<%
+    lines.forEach(function(line) {
+%>
+                <%= line %><br>
+<%
+        });
+%>
+            </td>
+        </tr>
+<%
+}
+
+function writeBackground(background) {
+    var steps = background.getSteps();
+%>
+        <tr>
+            <td colspan=6><%= writeFirstLine(background) %></td>
+<%
+    checkForDescription(background);
+    steps.syncForEach(function(step) {
+        writeStep(step, true, true);
+    });
+%>
+        </tr>
+<%
+}
+
+function writeScenario(scenario, htmlOut) {
+    var pass = true;
+    var steps = scenario.getSteps();
+    var tags = [];
+    if (scenario.getTags) {
+        tags = scenario.getTags();
+        if (getTag(tags, scenario.getLine())) {
+            steps.syncForEach(function(step) {
+                pass = (pass && writeStep(step, false, false));
+            });
+            if (htmlOut){
+%>
+        <tr class= <%= (pass) ? "\"pass\"" : "\"fail\"" %> >
+            <td colspan=6><%= writeFirstLine(scenario) %></td>
+        </tr>
+<%
+                checkForDescription(scenario);
+                steps.syncForEach(function(step) {
+                    writeStep(step, false, true);
+                });
+            }
+        }
+    }
+    return pass;
+}
+
+function writeStep(step, back, htmlOut) {
+    var pass = true;
+    var firstLine = step.getKeyword() + step.getName();
+    if (step.hasAttachment() && step.hasTestResults()) {
+        var tests = step.getTestResults().getTestResults();
+        tests.syncForEach(function(test) {
+            pass = (pass && (test.raw()[0] !== 'FAIL'));
+        });
+    }
+    if (htmlOut) {
+        if (back) {
+%>
+        <tr>
+<%
+        } else {
+%>
+        <tr class= <%= (pass) ? "\"pass\"" : "\"fail\"" %> >
+<%      
+        }
+%>
+            <td>&nbsp;</td>
+            <td colspan=5><%= firstLine %></td>
+        </tr>
+<%
+        if (step.hasAttachment() && step.hasTestResults()) {
+            tests.syncForEach(function(test) {
+                writeTest(test.raw());
+            });
+            if (step.hasDataTable() && step.getDataTable().raw()[0].length !== 4) {
+                var rows = step.getDataTable().getRows();
+%>
+        <tr class= <%= (pass) ? "\"pass\"" : "\"fail\"" %> >
+<%
+                rows.syncForEach(function(row) {
+                    writeRawTable(row.raw());
+                });
+%>
+        </tr>
+<%
+            }
+        }
+    }
+    return pass;
+}
+
+function writeRawTable(raw) {
+%>
+            <td></td><td></td>
+<%
+    raw.forEach(function(element) {
+%>
+            <td><%= element %></td>
+<%
+    });
+}
+
+function writeTest(raw) {
+    var keyword = '';
+    switch (raw[0]) {
+        case 'PASS':
+            keyword = '"pass"';
+            break;
+        case 'FAIL':
+            keyword = '"fail"';
+            break;
+        case 'SKIPPED':
+            keyword = '"skipped"';
+            break;
+        default:
+            keyword = '"pass"';
+    }
+%>
+        <tr class= <%= keyword%> >
+            <td></td><td></td>
+<%
+    raw.forEach(function(element) {
+%>
+            <td><%= element %></td>
+<%
+    });
+%>
+        </tr>
+<%
+}
+
+function checkForDescription(element) {
+    if (element.getDescription() && element.getDescription().length > 0) {
+        var description = element.getDescription();
+        writeDescription(description);
+        emptyRow();
+    }
+}
+
+function checkForBackground(element) {
+    if (element.getBackground()) {
+        var background = element.getBackground();
+        writeBackground(background);
+        emptyRow();
+    }
+}
+
+function writeFirstLine(element) {
+    return element.getKeyword() + ': ' + element.getName();
+}
+function emptyRow() {
+%>
+        <tr>
+            <td colspan=6>
+            </td>
+        </tr>
+<%
+}
+write();
+%>
+        </table>
+    </body>
+</html>

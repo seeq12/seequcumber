@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Features</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> 
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+        <style>
+          body {
+            font-family: Lato, sans-serif;
+            color: #395a6b;
+          }
+          table {
+            width: 60em;
+          }
+          table, tr, th, td {
+            text-align: left;
+            border: 0px;
+            border-collapse: collapse;
+            margin: 0px;
+            padding: 5px;
+          }
+          .pass {
+            background-color: #DDFFDD;
+          }
+          .fail {
+            background-color: #FFDDDD;
+          }
+          .skipped {
+            background-color: #FFFFDD;
+          }
+           .list-group {
+            margin-bottom: 0px;
+          }
+           .list-group-item {
+            padding-top: 0px;
+            padding-bottom: 0px;
+            border-top: 0px;
+            border-bottom: 0px;
+            border-right: 0px;
+            border-left: 1px;
+            width: 100%;
+          }
+           .feature {
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+          }
+           .background {
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+          }
+           .scenario {
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+          }
+           .itemContainer {
+            border-left: 0px !important;
+          }
+           .featureContainer {
+            border-bottom: 1px !important;
+            border-right: 1px !important;
+            border-left: 1px !important;
+          }
+        </style>
+    </head>
+    <script>
+        $(document).ready(function(){
+            $('.arrow').click(function (e) {
+                var idArrow = e.target.id + '-arrow';
+                $('#'+idArrow).toggleClass("glyphicon-chevron-right glyphicon-chevron-down");
+                e.preventDefault();
+            });
+        });
+    </script>
+    <body>
+<%
+var features = data;
+
+function getTag (tags, lineNumber) {
+    var exists = false;
+    tags.forEach(function(tag) {
+        if (tag.getLine() + 1 === lineNumber) {
+            if (tag.getName() === '@manual') {
+                exists = true;
+            }
+        }
+    });
+    return exists;
+}
+
+function write() {
+%>
+        <div class="container">
+            <ul class="list-group">
+<%
+    features.syncForEach(function(feature,index){
+        var pass = true;
+        var scenarios = feature.getFeatures();
+        var id = 'feature-' + index;
+        scenarios.syncForEach(function(scenario) {
+            pass = (pass && writeScenario(scenario, false));
+        });
+%>
+                <li class=<%=getClass("list-group-item feature", pass)%>>
+                    <div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
+                        <%=writeFirstLine(feature)%>
+                        <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
+                    </div>
+                </li>
+                <li class="list-group-item featureContainer" id= <%=getID(id + '-container')%> >
+                    <div class="collapse" id= <%=getID(id + '-child')%> >
+                        <ul class="list-group">
+<%
+        checkForDescription(feature, id);
+        checkForBackground(feature, id);
+        scenarios.syncForEach(function(scenario, ind) {
+            var scenario_id = id + '-scenario-' + ind;
+            writeScenario(scenario, true, scenario_id);
+        });
+%>
+                        </ul>
+                    </div>
+                </li>
+<%
+    });
+%>
+            </ul>
+        </div>
+<%
+}
+
+function writeDescription(description, i) {
+    var lines = description.split('\n');
+    var id = i + '-description';
+%>
+                            <li class="list-group-item description" id= <%=getID(id)%> >
+<%
+    lines.forEach(function(line) {
+%>
+                                <%=line%><br>
+<%
+        });
+%>
+                            </li>
+<%
+}
+
+function writeBackground(background, i) {
+    var steps = background.getSteps();
+    var id = i + '-background';
+%>
+                            <li class="list-group-item background"><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
+                                <%=writeFirstLine(background)%>
+                                <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
+                            </div></li>
+
+<%
+    checkForDescription(background);
+%>
+                            <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
+                                <div class="collapse" id= <%=getID(id + '-child')%> >
+                                    <ul class="list-group">
+<%
+    steps.syncForEach(function(step,ind) {
+        var step_id = id + '-step-' + ind;
+        writeStep(step, true, true, step_id);
+    });
+%>
+                                    </ul>
+                                </div>
+                            </li>
+<%
+}
+
+function writeScenario(scenario, htmlOut, id) {
+    var pass = true;
+    var steps = scenario.getSteps();
+    var tags = [];
+    if (scenario.getTags) {
+        tags = scenario.getTags();
+        if (getTag(tags, scenario.getLine())) {
+            steps.syncForEach(function(step) {
+                pass = (pass && writeStep(step, false, false));
+            });
+            if (htmlOut){
+%>
+                            <li class=<%=getClass("list-group-item scenario", pass)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
+                                <%=writeFirstLine(scenario)%>
+                                <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
+                            </div></li>
+<%
+                checkForDescription(scenario);
+%>
+                            <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
+                                <div class="collapse" id= <%=getID(id + '-child')%> >
+                                    <ul class="list-group">
+<%
+    steps.syncForEach(function(step,ind) {
+        var step_id = id + '-step-' + ind;
+        writeStep(step, false, true, step_id);
+    });
+%>
+                                    </ul>
+                                </div>
+                            </li>
+<%
+            }
+        }
+    }
+    return pass;
+}
+
+function writeStep(step, back, htmlOut, id) {
+    var pass = true;
+    var firstLine = step.getKeyword() + step.getName();
+    if (step.hasAttachment() && step.hasTestResults()) {
+        var tests = step.getTestResults().getTestResults();
+        tests.syncForEach(function(test) {
+            pass = (pass && (test.raw()[0] !== 'FAIL'));
+        });
+    }
+    if (htmlOut) {
+        if (back) {
+%>
+                                        <li class="list-group-item step"><div class="firstLine" id= <%=getID(id)%> >
+<%
+        } else {
+%>
+                                        <li class=<%=getClass("list-group-item step", pass)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id=<%=getID(id)%> >
+<%      
+        }
+%>
+                                            <%=firstLine%>
+<%
+        if (step.hasAttachment()) { 
+%>
+                                            <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
+                                        </div></li>
+<%
+            if (step.hasTestResults()) {
+%>
+                                        <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
+                                            <div class="collapse" id= <%=getID(id + '-child')%> >
+                                                <ul class="list-group">
+                                                    <li class="list-group-item test">
+<%
+            tests.syncForEach(function(test) {
+                writeTest(test.raw());
+            });
+%>
+                                                    </li>
+<%
+            }
+            if (step.hasDataTable() && step.getDataTable().raw()[0].length !== 4) {
+                var rows = step.getDataTable().getRows();
+%>
+                                                    <li class= <%=getClass("list-group-item data", pass)%> >
+                                                        <table class="table table-condensed">
+                                                            <tbody>
+<%
+                rows.syncForEach(function(row) {
+                    writeRawTable(row.raw());
+                });
+%>                                      
+                                                            </tbody>
+                                                        </table>
+                                                    </li>
+<%
+            }
+%>
+                                                </ul>
+                                            </div>
+                                        </li>
+<%
+        } else {
+%>
+                                        </div></li>
+<%
+        }
+    }
+    return pass;
+}
+
+function writeRawTable(raw) {
+%>
+                                                                <tr>
+<%
+    raw.forEach(function(element) {
+%>
+                                                                    <td><%=element%></td>
+<%
+    });
+%>
+                                                                </tr>
+<%
+}
+
+function writeTest(raw) {
+    var keyword = '';
+    switch (raw[0]) {
+        case 'PASS':
+            keyword = ' pass"';
+            break;
+        case 'FAIL':
+            keyword = ' fail"';
+            break;
+        case 'SKIPPED':
+            keyword = ' skipped"';
+            break;
+        default:
+            keyword = ' pass"';
+    }
+%>
+                                                        <div class= <%= '"row' + keyword%> >
+<%
+    raw.forEach(function(element) {
+%>
+                                                            <div class="col-sm-3"><%= element %></div>
+<%
+    });
+%>
+                                                        </div>
+<%
+}
+
+function getClass(className, pass) {
+    var out = '"' + className;
+    if(pass){
+        out += ' pass"';
+    } else {
+        out += ' fail"';
+    }
+    return out;
+}
+
+function getID(id) {
+    var out = '"' + id + '"';
+    return out;
+}
+
+function checkForDescription(element, id) {
+    if (element.getDescription() && element.getDescription().length > 0) {
+        var description = element.getDescription();
+        writeDescription(description, id);
+    }
+}
+
+function checkForBackground(element, id) {
+    if (element.getBackground()) {
+        var background = element.getBackground();
+        writeBackground(background, id);
+    }
+}
+
+function writeFirstLine(element) {
+    return element.getKeyword() + ': ' + element.getName();
+}
+
+write();
+%>
+    </body>
+</html>

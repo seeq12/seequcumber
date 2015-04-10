@@ -11,6 +11,7 @@ function Deserializer(directory) {
             var files = self.files(directory);
             self.readFeatures(files);
             self.addTestResults(self.getFeatures());
+            return self.getFeatures();
         },
         files: function files(dir) {
             var items = fs.readdirSync(dir).filter(function(file) {
