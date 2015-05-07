@@ -45,15 +45,7 @@
             border-left: 1px;
             width: 100%;
           }
-           .feature {
-            padding-top: 10px !important;
-            padding-bottom: 10px !important;
-          }
-           .background {
-            padding-top: 10px !important;
-            padding-bottom: 10px !important;
-          }
-           .scenario {
+           .behavior, .directory, .feature, .background, .scenario {
             padding-top: 10px !important;
             padding-bottom: 10px !important;
           }
@@ -81,7 +73,9 @@
     </script>
     <body>
 <%
-var features = data;
+var datum = data;
+var features = datum.features;
+var dirs = datum.dirs;
 
 function getTag (tags, lineNumber) {
     var exists = false;
@@ -94,29 +88,85 @@ function getTag (tags, lineNumber) {
     });
     return exists;
 }
-
 function write() {
+    var pass = true;
+    var id = 'behavior';
+    dirs.forEach(function(dir, index){
+        pass = (pass && writeDir(index, false));
+    });
 %>
         <div class="container">
             <ul class="list-group">
-<%
-    features.syncForEach(function(feature,index){
-        var pass = true;
-        var scenarios = feature.getFeatures();
-        var id = 'feature-' + index;
-        scenarios.syncForEach(function(scenario) {
-            pass = (pass && writeScenario(scenario, false));
-        });
-%>
-                <li class=<%=getClass("list-group-item feature", pass)%>>
+                <li class=<%=getClass("list-group-item behavior", pass)%>>
                     <div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
                         <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
-                        <%=writeFirstLine(feature)%>
+                        <%='ALL TESTS ' + ((pass) ? 'PASSED' : 'DID NOT PASS') %>
                     </div>
                 </li>
-                <li class="list-group-item featureContainer" id= <%=getID(id + '-container')%> >
+                <li class="list-group-item bContainer" id= <%=getID(id + '-container')%> >
                     <div class="collapse" id= <%=getID(id + '-child')%> >
                         <ul class="list-group">
+<%
+    dirs.forEach(function(dir,index) {
+        var dir_id = id + '-' + dir.replace(/\s+/g, '');
+        writeDir(index, true, dir_id);
+    });
+%>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+<%
+}
+
+function writeDir(index, htmlOut, id) {
+    var pass = true;
+    features[index].syncForEach(function(feature){
+        pass = (pass && writeFeature(feature, false));
+    });
+    if (htmlOut) {
+%>
+                            <li class=<%=getClass("list-group-item directory", pass)%>>
+                                <div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
+                                    <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
+                                    <%=dirs[index]%>
+                                </div>
+                            </li>
+                            <li class="list-group-item dirContainer" id= <%=getID(id + '-container')%> >
+                                <div class="collapse" id= <%=getID(id + '-child')%> >
+                                    <ul class="list-group">
+<%
+        features[index].syncForEach(function(feature, ind) {
+            var feature_id = id + '-feature-' + ind;
+            writeFeature(feature, true, feature_id);
+        });
+%>
+                                    </ul>
+                                </div>
+                            </li>
+<%
+    }
+    return pass;
+}
+
+function writeFeature(feature, htmlOut, id){
+    var pass = true;
+    var scenarios = feature.getFeatures();
+    scenarios.syncForEach(function(scenario) {
+        pass = (pass && writeScenario(scenario, false));
+    });
+    if (htmlOut) {
+%>
+                                        <li class=<%=getClass("list-group-item feature", pass)%>>
+                                            <div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
+                                                <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
+                                                <%=writeFirstLine(feature)%>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item featureContainer" id= <%=getID(id + '-container')%> >
+                                            <div class="collapse" id= <%=getID(id + '-child')%> >
+                                                <ul class="list-group">
 <%
         checkForDescription(feature, id);
         checkForBackground(feature, id);
@@ -125,22 +175,19 @@ function write() {
             writeScenario(scenario, true, scenario_id);
         });
 %>
-                        </ul>
-                    </div>
-                </li>
+                                                </ul>
+                                            </div>
+                                        </li>
 <%
-    });
-%>
-            </ul>
-        </div>
-<%
+    }
+    return pass;
 }
 
 function writeDescription(description, i) {
     var lines = description.split('\n');
     var id = i + '-description';
 %>
-                            <li class="list-group-item description" id= <%=getID(id)%> >
+                                                    <li class="list-group-item description" id= <%=getID(id)%> >
 <%
     lines.forEach(function(line) {
 %>
@@ -156,26 +203,26 @@ function writeBackground(background, i) {
     var steps = background.getSteps();
     var id = i + '-background';
 %>
-                            <li class="list-group-item background"><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
-                                <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
-                                <%=writeFirstLine(background)%>
-                            </div></li>
+                                                    <li class="list-group-item background"><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
+                                                        <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
+                                                        <%=writeFirstLine(background)%>
+                                                    </div></li>
 
 <%
     checkForDescription(background);
 %>
-                            <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
-                                <div class="collapse" id= <%=getID(id + '-child')%> >
-                                    <ul class="list-group">
+                                                    <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
+                                                        <div class="collapse" id= <%=getID(id + '-child')%> >
+                                                            <ul class="list-group">
 <%
     steps.syncForEach(function(step,ind) {
         var step_id = id + '-step-' + ind;
         writeStep(step, true, true, step_id);
     });
 %>
-                                    </ul>
-                                </div>
-                            </li>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
 <%
 }
 
@@ -191,25 +238,25 @@ function writeScenario(scenario, htmlOut, id) {
             });
             if (htmlOut){
 %>
-                            <li class=<%=getClass("list-group-item scenario", pass)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
-                                <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
-                                <%=writeFirstLine(scenario)%>
-                            </div></li>
+                                                    <li class=<%=getClass("list-group-item scenario", pass)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
+                                                        <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
+                                                        <%=writeFirstLine(scenario)%>
+                                                    </div></li>
 <%
                 checkForDescription(scenario);
 %>
-                            <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
-                                <div class="collapse" id= <%=getID(id + '-child')%> >
-                                    <ul class="list-group">
+                                                    <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
+                                                        <div class="collapse" id= <%=getID(id + '-child')%> >
+                                                            <ul class="list-group">
 <%
     steps.syncForEach(function(step,ind) {
         var step_id = id + '-step-' + ind;
         writeStep(step, false, true, step_id);
     });
 %>
-                                    </ul>
-                                </div>
-                            </li>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
 <%
             }
         }
@@ -229,58 +276,58 @@ function writeStep(step, back, htmlOut, id) {
     if (htmlOut) {
         if (back) {
 %>
-                                        <li class="list-group-item step"><div class="firstLine" id= <%=getID(id)%> >
+                                                                <li class="list-group-item step"><div class="firstLine" id= <%=getID(id)%> >
 <%
         } else {
 %>
-                                        <li class=<%=getClass("list-group-item step", pass)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id=<%=getID(id)%> >
+                                                                <li class=<%=getClass("list-group-item step", pass)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id=<%=getID(id)%> >
 <%
             if (step.hasAttachment()) {
 %>
-                                            <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
+                                                                    <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
 <%      
             }
         }
 %>
-                                            <%=firstLine%>
-                                        </div></li>
+                                                                    <%=firstLine%>
+                                                                </div></li>
 <%
         if (step.hasAttachment()) { 
             if (step.hasTestResults()) {
 %>
-                                        <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
-                                            <div class="collapse" id= <%=getID(id + '-child')%> >
-                                                <ul class="list-group">
-                                                    <li class="list-group-item test">
-<%
+                                                                <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
+                                                                    <div class="collapse" id= <%=getID(id + '-child')%> >
+                                                                        <ul class="list-group">
+                                                                            <li class="list-group-item test">
+            <%
             tests.syncForEach(function(test) {
                 writeTest(test.raw());
             });
 %>
-                                                    </li>
+                                                                            </li>
 <%
             }
             if (step.hasDataTable() && step.getDataTable().raw()[0].length !== 4) {
                 var rows = step.getDataTable().getRows();
 %>
-                                                    <li class= <%=getClass("list-group-item data", pass)%> >
-                                                        <table class="table table-condensed">
-                                                            <tbody>
+                                                                            <li class= <%=getClass("list-group-item data", pass)%> >
+                                                                                <table class="table table-condensed">
+                                                                                    <tbody>
 <%
                 rows.syncForEach(function(row) {
                     writeRawTable(row.raw());
                 });
 %>                                      
-                                                            </tbody>
-                                                        </table>
-                                                    </li>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </li>
 <%
             }
 %>
-                                                </ul>
-                                            </div>
-                                        </li>
-<%
+                                                                        </ul>
+                                                                    </div>
+                                                                </li>
+        <%
         }
     }
     return pass;
@@ -288,15 +335,15 @@ function writeStep(step, back, htmlOut, id) {
 
 function writeRawTable(raw) {
 %>
-                                                                <tr>
+                                                                                        <tr>
 <%
     raw.forEach(function(element) {
 %>
-                                                                    <td><%=element%></td>
+                                                                                            <td><%=element%></td>
 <%
     });
 %>
-                                                                </tr>
+                                                                                        </tr>
 <%
 }
 
@@ -316,15 +363,15 @@ function writeTest(raw) {
             keyword = ' pass"';
     }
 %>
-                                                        <div class= <%= '"row' + keyword%> >
+                                                                                <div class= <%= '"row' + keyword%> >
 <%
     raw.forEach(function(element) {
 %>
-                                                            <div class="col-sm-3"><%= element %></div>
+                                                                                    <div class="col-sm-3"><%= element %></div>
 <%
     });
 %>
-                                                        </div>
+                                                                                </div>
 <%
 }
 

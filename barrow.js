@@ -5,18 +5,27 @@ var ejs = require('ejs');
 var barrow = {
     deserializer: require('./seequmber/deserializer'),
     serializer: require('./seequmber/serializer'),
-    renderHTML: function renderHTML(directory) {
+    renderHTML: function renderHTML(directories) {
         var ejsString = fs.readFileSync(__dirname + '/seequmber/serializer.ejs').toString();
-        var deserializer = new barrow.deserializer(directory);
-        var features = deserializer.deserialize();
         var html = '';
-        if (features) {
-            html = ejs.render(ejsString, {
-                data: features
-            });
-            html = html.replace(/&#34;/g, '"');
-            html = html.replace(/^\s*[\r\n]/gm, '');
-        }
+        var data = {
+            features: [],
+            dirs: []
+        };
+        directories.forEach(function(directory) {
+            var fileArray = directory.split('/');
+            var deserializer = new barrow.deserializer(directory);
+            var features = deserializer.deserialize();
+            if (features) {
+                data.features.push(features);
+                data.dirs.push(fileArray[fileArray.length - 2]);
+            }
+        });
+        html = ejs.render(ejsString, {
+            data: data
+        });
+        html = html.replace(/&#34;/g, '"');
+        html = html.replace(/^\s*[\r\n]/gm, '');
         return html;
     }
 };
