@@ -269,9 +269,7 @@ function writeStep(step, back, htmlOut, id) {
     var firstLine = step.getKeyword() + step.getName();
     if (step.hasAttachment() && step.hasTestResults()) {
         var tests = step.getTestResults().getTestResults();
-        tests.syncForEach(function(test) {
-            pass = (pass && (test.raw()[0] !== 'FAIL'));
-        });
+        pass = (pass && (tests.getAtIndex(0).raw()[0] === 'PASS'));
     }
     if (htmlOut) {
         if (back) {
