@@ -8,7 +8,12 @@ function TestResults(dataTable) {
     var testCollection = Cucumber.Type.Collection();
 
     (function rowToTestResult() {
-        dataTable.getRows().syncForEach(function(row) {
+        var rows = dataTable.getRows();
+        rows = rows.sort(function(a, b) {
+            return (a.raw()[1]) < (b.raw()[1]);
+        });
+        
+        rows.syncForEach(function(row) {
             var testResult = new TestResult(row.raw()[0], row.raw()[1], row.raw()[2], row.raw()[3]);
             testCollection.add(testResult);
             row.raw().forEach(function(element, index) {
