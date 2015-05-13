@@ -101,16 +101,16 @@ function write() {
     var message = 'ALL TESTS ';
     switch(state) {
         case 'incomplete':
-            message = message + 'NOT COMPLETED';
+            message = 'SOME TESTS ARE INCOMPLETE';
             break;
         case 'fail':
-            message = message + 'FAILED';
+            message = 'SOME TESTS FAILED';
             break;
         case 'skipped':
-            message = message + 'SKIPPED';
+            message = 'SOME TESTS WERE SKIPPED';
             break;
         case 'pass':
-            message = message + 'PASSED';
+            message = 'ALL TESTS PASSED';
             break;
     }
 %>
