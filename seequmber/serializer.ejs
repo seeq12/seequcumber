@@ -32,6 +32,9 @@
           .skipped {
             background-color: #FFFFDD;
           }
+          .incomplete {
+            background-color: #b2beb5;
+          }
            .list-group {
             margin-bottom: 0px;
           }
@@ -76,6 +79,7 @@
 var datum = data;
 var features = datum.features;
 var dirs = datum.dirs;
+var version = datum.version;
 
 function getTag (tags, lineNumber) {
     var exists = false;
@@ -89,18 +93,33 @@ function getTag (tags, lineNumber) {
     return exists;
 }
 function write() {
-    var pass = true;
+    var state = 'pass';
     var id = 'behavior';
     dirs.forEach(function(dir, index){
-        pass = (pass && writeDir(index, false));
+        state = checkState(state,writeDir(index, false));
     });
+    var message = 'ALL TESTS ';
+    switch(state) {
+        case 'incomplete':
+            message = message + 'NOT COMPLETED';
+            break;
+        case 'fail':
+            message = message + 'FAILED';
+            break;
+        case 'skipped':
+            message = message + 'SKIPPED';
+            break;
+        case 'pass':
+            message = message + 'PASSED';
+            break;
+    }
 %>
         <div class="container">
             <ul class="list-group">
-                <li class=<%=getClass("list-group-item behavior", pass)%>>
+                <li class=<%=getClass("list-group-item behavior", state)%>>
                     <div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
                         <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
-                        <%='ALL TESTS ' + ((pass) ? 'PASSED' : 'DID NOT PASS') %>
+                        <%=message %>
                     </div>
                 </li>
                 <li class="list-group-item bContainer" id= <%=getID(id + '-container')%> >
@@ -121,13 +140,13 @@ function write() {
 }
 
 function writeDir(index, htmlOut, id) {
-    var pass = true;
+    var state = 'pass';
     features[index].syncForEach(function(feature){
-        pass = (pass && writeFeature(feature, false));
+        state = checkState(state,writeFeature(feature, false));
     });
     if (htmlOut) {
 %>
-                            <li class=<%=getClass("list-group-item directory", pass)%>>
+                            <li class=<%=getClass("list-group-item directory", state)%>>
                                 <div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
                                     <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
                                     <%=dirs[index]%>
@@ -147,18 +166,18 @@ function writeDir(index, htmlOut, id) {
                             </li>
 <%
     }
-    return pass;
+    return state;
 }
 
 function writeFeature(feature, htmlOut, id){
-    var pass = true;
+    var state = 'pass';
     var scenarios = feature.getFeatures();
     scenarios.syncForEach(function(scenario) {
-        pass = (pass && writeScenario(scenario, false));
+        state = checkState(state,writeScenario(scenario, false));
     });
     if (htmlOut) {
 %>
-                                        <li class=<%=getClass("list-group-item feature", pass)%>>
+                                        <li class=<%=getClass("list-group-item feature", state)%>>
                                             <div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
                                                 <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
                                                 <%=writeFirstLine(feature)%>
@@ -180,7 +199,7 @@ function writeFeature(feature, htmlOut, id){
                                         </li>
 <%
     }
-    return pass;
+    return state;
 }
 
 function writeDescription(description, i) {
@@ -227,18 +246,18 @@ function writeBackground(background, i) {
 }
 
 function writeScenario(scenario, htmlOut, id) {
-    var pass = true;
+    var state = 'pass';
     var steps = scenario.getSteps();
     var tags = [];
     if (scenario.getTags) {
         tags = scenario.getTags();
         if (getTag(tags, scenario.getLine())) {
             steps.syncForEach(function(step) {
-                pass = (pass && writeStep(step, false, false));
+                state = checkState(state,writeStep(step, false, false));
             });
             if (htmlOut){
 %>
-                                                    <li class=<%=getClass("list-group-item scenario", pass)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
+                                                    <li class=<%=getClass("list-group-item scenario", state)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id= <%=getID(id)%> >
                                                         <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
                                                         <%=writeFirstLine(scenario)%>
                                                     </div></li>
@@ -261,15 +280,24 @@ function writeScenario(scenario, htmlOut, id) {
             }
         }
     }
-    return pass;
+    return state;
 }
 
 function writeStep(step, back, htmlOut, id) {
-    var pass = true;
+    var state = 'pass';
     var firstLine = step.getKeyword() + step.getName();
     if (step.hasAttachment() && step.hasTestResults()) {
         var tests = step.getTestResults().getTestResults();
-        pass = (pass && (tests.getAtIndex(0).raw()[0] === 'PASS'));
+        var newTests = [];
+        tests.syncForEach(function(test) {
+            state = checkState(state,test.raw()[0].toLowerCase());
+            if (version.test('ALL') || version.test(test.raw()[1])) {
+                newTests.push(test);
+            }
+        });
+        if (newTests.length === 0){
+            state = 'incomplete';
+        }
     }
     if (htmlOut) {
         if (back) {
@@ -278,9 +306,9 @@ function writeStep(step, back, htmlOut, id) {
 <%
         } else {
 %>
-                                                                <li class=<%=getClass("list-group-item step", pass)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id=<%=getID(id)%> >
+                                                                <li class=<%=getClass("list-group-item step", state)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id=<%=getID(id)%> >
 <%
-            if (step.hasAttachment()) {
+            if ((step.hasTestResults() && newTests.length != 0) || (step.hasDataTable() && step.getDataTable().raw()[0].length !== 4 && step.getDataTable().raw().length != 0)) {
 %>
                                                                     <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
 <%      
@@ -298,7 +326,7 @@ function writeStep(step, back, htmlOut, id) {
                                                                         <ul class="list-group">
                                                                             <li class="list-group-item test">
             <%
-            tests.syncForEach(function(test) {
+            newTests.forEach(function(test) {
                 writeTest(test.raw());
             });
 %>
@@ -328,7 +356,7 @@ function writeStep(step, back, htmlOut, id) {
         <%
         }
     }
-    return pass;
+    return state;
 }
 
 function writeRawTable(raw) {
@@ -346,20 +374,7 @@ function writeRawTable(raw) {
 }
 
 function writeTest(raw) {
-    var keyword = '';
-    switch (raw[0]) {
-        case 'PASS':
-            keyword = ' pass"';
-            break;
-        case 'FAIL':
-            keyword = ' fail"';
-            break;
-        case 'SKIPPED':
-            keyword = ' skipped"';
-            break;
-        default:
-            keyword = ' pass"';
-    }
+    var keyword = raw[0].toLowerCase() + '"';
 %>
                                                                                 <div class= <%= '"row' + keyword%> >
 <%
@@ -373,14 +388,8 @@ function writeTest(raw) {
 <%
 }
 
-function getClass(className, pass) {
-    var out = '"' + className;
-    if(pass){
-        out += ' pass"';
-    } else {
-        out += ' fail"';
-    }
-    return out;
+function getClass(className, state) {
+    return '"' + className + ' ' + state + '"';
 }
 
 function getID(id) {
@@ -399,6 +408,18 @@ function checkForBackground(element, id) {
     if (element.getBackground()) {
         var background = element.getBackground();
         writeBackground(background, id);
+    }
+}
+
+function checkState(x,y) {
+    if (x === 'incomplete' || y === 'incomplete') {
+        return 'incomplete';
+    } else if(x === 'fail' || y === 'fail') {
+        return 'fail';
+    } else if(x === 'skipped' && y === 'skipped') {
+        return 'skipped';
+    } else {
+        return 'pass';
     }
 }
 
