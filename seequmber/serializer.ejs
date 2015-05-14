@@ -123,7 +123,7 @@ function write() {
                     </div>
                 </li>
                 <li class="list-group-item bContainer" id= <%=getID(id + '-container')%> >
-                    <div class="collapse in" id= <%=getID(id + '-child')%> >
+                    <div class= <%='"collapse' + ((state !== 'pass') ? ' in"' : '"') %> id= <%=getID(id + '-child')%> >
                         <ul class="list-group">
 <%
     dirs.forEach(function(dir,index) {
@@ -153,7 +153,7 @@ function writeDir(index, htmlOut, id) {
                                 </div>
                             </li>
                             <li class="list-group-item dirContainer" id= <%=getID(id + '-container')%> >
-                                <div class="collapse in" id= <%=getID(id + '-child')%> >
+                                <div class= <%='"collapse' + ((state !== 'pass') ? ' in"' : '"') %> id= <%=getID(id + '-child')%> >
                                     <ul class="list-group">
 <%
         features[index].syncForEach(function(feature, ind) {
@@ -184,7 +184,7 @@ function writeFeature(feature, htmlOut, id){
                                             </div>
                                         </li>
                                         <li class="list-group-item featureContainer" id= <%=getID(id + '-container')%> >
-                                            <div class="collapse in" id= <%=getID(id + '-child')%> >
+                                            <div class= <%='"collapse' + ((state !== 'pass') ? ' in"' : '"') %> id= <%=getID(id + '-child')%> >
                                                 <ul class="list-group">
 <%
         checkForDescription(feature, id);
@@ -231,7 +231,7 @@ function writeBackground(background, i) {
     checkForDescription(background);
 %>
                                                     <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
-                                                        <div class="collapse in" id= <%=getID(id + '-child')%> >
+                                                        <div class="collapse" id= <%=getID(id + '-child')%> >
                                                             <ul class="list-group">
 <%
     steps.syncForEach(function(step,ind) {
@@ -265,7 +265,7 @@ function writeScenario(scenario, htmlOut, id) {
                 checkForDescription(scenario);
 %>
                                                     <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
-                                                        <div class="collapse in" id= <%=getID(id + '-child')%> >
+                                                        <div class= <%='"collapse' + ((state !== 'pass') ? ' in"' : '"') %> id= <%=getID(id + '-child')%> >
                                                             <ul class="list-group">
 <%
     steps.syncForEach(function(step,ind) {
@@ -324,7 +324,7 @@ function writeStep(step, back, htmlOut, id) {
             if (step.hasTestResults()) {
 %>
                                                                 <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
-                                                                    <div class="collapse in" id= <%=getID(id + '-child')%> >
+                                                                    <div class= <%='"collapse' + ((state !== 'pass') ? ' in"' : '"') %> id= <%=getID(id + '-child')%> >
                                                                         <ul class="list-group">
                                                                             <li class="list-group-item test">
             <%
