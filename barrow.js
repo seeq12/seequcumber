@@ -5,12 +5,15 @@ var ejs = require('ejs');
 var barrow = {
     deserializer: require('./seequmber/deserializer'),
     serializer: require('./seequmber/serializer'),
-    renderHTML: function renderHTML(directories) {
+    renderHTML: function renderHTML(payload) {
+        var directories = payload.dirs;
+        var version = payload.version;
         var ejsString = fs.readFileSync(__dirname + '/seequmber/serializer.ejs').toString();
         var html = '';
         var data = {
             features: [],
-            dirs: []
+            dirs: [],
+            version: version
         };
         directories.forEach(function(directory) {
             var fileArray = directory.split('/');
