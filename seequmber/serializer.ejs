@@ -327,8 +327,8 @@ function writeScenario(scenario, htmlOut, id) {
 function writeStep(step, back, htmlOut, id) {
     var state = '';
     var firstLine = step.getKeyword() + step.getName();
-    if (step.hasAttachment() && step.hasTestResults()) {
-        var tests = step.getTestResults().getTestResults();
+    if (step.hasAttachment() && step.hasDataTable()) {
+        var tests = step.getDataTable().getTestResults();
         var newTests = [];
         tests.syncForEach(function(test) {
             // We only take the first result as the status for the overall step. getTestResults() sorts the
@@ -356,7 +356,7 @@ function writeStep(step, back, htmlOut, id) {
 %>
                                                                 <li class=<%=getClass("list-group-item step", state)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id=<%=getID(id)%> >
 <%
-            if ((step.hasTestResults() && newTests.length != 0) || (step.hasDataTable() && step.getDataTable().raw()[0].length !== 4 && step.getDataTable().raw().length != 0)) {
+            if ((step.hasDataTable() && newTests.length != 0) || (step.hasDataTable() && step.getDataTable().raw()[0].length !== 4 && step.getDataTable().raw().length != 0)) {
 %>
                                                                     <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
 <%      
