@@ -367,7 +367,7 @@ function writeStep(step, back, htmlOut, id) {
                                                                 </div></li>
 <%
         if (step.hasAttachment()) { 
-            if (step.hasTestResults()) {
+            if (step.hasDataTable() && step.getDataTable().raw()[0].length === 4) {
 %>
                                                                 <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
                                                                     <div class= <%='"collapse' + ((state !== 'pass') ? ' in"' : '"') %> id= <%=getID(id + '-child')%> >
@@ -380,8 +380,7 @@ function writeStep(step, back, htmlOut, id) {
 %>
                                                                             </li>
 <%
-            }
-            if (step.hasDataTable() && step.getDataTable().raw()[0].length !== 4) {
+            } else if (step.hasDataTable() && step.getDataTable().raw()[0].length !== 4) {
                 var rows = step.getDataTable().getRows();
 %>
                                                                             <li class= <%=getClass("list-group-item data", pass)%> >
