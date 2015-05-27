@@ -12,7 +12,7 @@
         "url": "git://github.com/seeq12/barrow.git"
     },
     "dependencies": {
-        "cucumber-js": "git+https://github.com/seeq12/cucumber-js.git",
+        "cucumber-js": "git+https://github.com/seeq12/cucumber-js.git#bb427e880712f505946af935c5958628122252a2",
         "ejs": ">= 0.0.1"
     },
     "author": "Nikhil Joy <nikhil.joy@seeq.com>"
