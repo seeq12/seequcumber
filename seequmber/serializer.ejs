@@ -334,7 +334,7 @@ function writeStep(step, back, htmlOut, id) {
             // We only take the first result as the status for the overall step. getTestResults() sorts the
             // test results by version before returning them, so we know that the first item is the 'latest' item.
             if (state === '') {
-                state = test.raw()[0].toLowerCase();
+                state = test.getResult().toLowerCase();
             }
             
             if (version.test('ALL') || version.test(test.raw()[1])) {
