@@ -330,17 +330,19 @@ function writeStep(step, back, htmlOut, id) {
     if (step.hasAttachment() && step.hasDataTable()) {
         var tests = step.getDataTable().getTestResults();
         var newTests = [];
-        tests.syncForEach(function(test) {
-            // We only take the first result as the status for the overall step. getTestResults() sorts the
-            // test results by version before returning them, so we know that the first item is the 'latest' item.
-            if (state === '') {
-                state = test.getResult().toLowerCase();
-            }
-            
-            if (version.test('ALL') || version.test(test.raw()[1])) {
-                newTests.push(test);
-            }
-        });
+        if (tests) {
+            tests.syncForEach(function(test) {
+                // We only take the first result as the status for the overall step. getTestResults() sorts the
+                // test results by version before returning them, so we know that the first item is the 'latest' item.
+                if (state === '') {
+                    state = test.getResult().toLowerCase();
+                }
+                
+                if (version.test('ALL') || version.test(test.getVersion())) {
+                    newTests.push(test);
+                }
+            });
+        }
         if (newTests.length === 0){
             state = 'incomplete';
         }
