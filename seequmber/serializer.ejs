@@ -327,20 +327,22 @@ function writeScenario(scenario, htmlOut, id) {
 function writeStep(step, back, htmlOut, id) {
     var state = '';
     var firstLine = step.getKeyword() + step.getName();
-    if (step.hasAttachment() && step.hasTestResults()) {
-        var tests = step.getTestResults().getTestResults();
+    if (step.hasAttachment() && step.hasDataTable()) {
+        var tests = step.getDataTable().getTestResults();
         var newTests = [];
-        tests.syncForEach(function(test) {
-            // We only take the first result as the status for the overall step. getTestResults() sorts the
-            // test results by version before returning them, so we know that the first item is the 'latest' item.
-            if (state === '') {
-                state = test.raw()[0].toLowerCase();
-            }
-            
-            if (version.test('ALL') || version.test(test.raw()[1])) {
-                newTests.push(test);
-            }
-        });
+        if (tests) {
+            tests.syncForEach(function(test) {
+                // We only take the first result as the status for the overall step. getTestResults() sorts the
+                // test results by version before returning them, so we know that the first item is the 'latest' item.
+                if (state === '') {
+                    state = test.getResult().toLowerCase();
+                }
+                
+                if (version.test('ALL') || version.test(test.getVersion())) {
+                    newTests.push(test);
+                }
+            });
+        }
         if (newTests.length === 0){
             state = 'incomplete';
         }
@@ -356,7 +358,7 @@ function writeStep(step, back, htmlOut, id) {
 %>
                                                                 <li class=<%=getClass("list-group-item step", state)%>><div class="firstLine arrow" data-toggle="collapse" data-target= <%=getID('#' + id + '-child')%> id=<%=getID(id)%> >
 <%
-            if ((step.hasTestResults() && newTests.length != 0) || (step.hasDataTable() && step.getDataTable().raw()[0].length !== 4 && step.getDataTable().raw().length != 0)) {
+            if ((step.hasDataTable() && newTests.length != 0) || (step.hasDataTable() && step.getDataTable().raw()[0].length !== 4 && step.getDataTable().raw().length != 0)) {
 %>
                                                                     <span class="glyphicon glyphicon-chevron-right" id= <%=getID(id + '-arrow')%> ></span>
 <%      
@@ -367,7 +369,7 @@ function writeStep(step, back, htmlOut, id) {
                                                                 </div></li>
 <%
         if (step.hasAttachment()) { 
-            if (step.hasTestResults()) {
+            if (step.hasDataTable() && step.getDataTable().raw()[0].length === 4) {
 %>
                                                                 <li class="list-group-item itemContainer" id= <%=getID(id + '-container')%> >
                                                                     <div class= <%='"collapse' + ((state !== 'pass') ? ' in"' : '"') %> id= <%=getID(id + '-child')%> >
@@ -380,8 +382,7 @@ function writeStep(step, back, htmlOut, id) {
 %>
                                                                             </li>
 <%
-            }
-            if (step.hasDataTable() && step.getDataTable().raw()[0].length !== 4) {
+            } else if (step.hasDataTable() && step.getDataTable().raw()[0].length !== 4) {
                 var rows = step.getDataTable().getRows();
 %>
                                                                             <li class= <%=getClass("list-group-item data", pass)%> >

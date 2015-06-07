@@ -64,8 +64,10 @@ function Deserializer(directory) {
                     var steps = scenario.getSteps();
                     steps.syncForEach(function(step) {
                         if (step.hasDataTable()) {
-                            var table = new TestResults(step.getDataTable());
-                            step.attachTestResults(table);
+                            if (step.getDataTable().raw()[0].length === 4) {
+                                var table = new TestResults(step.getDataTable());
+                                step.attachDataTable(table);
+                            }
                         }
                     });
                 });
