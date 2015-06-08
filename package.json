@@ -1,19 +1,19 @@
-{
-    "name": "barrow",
-    "version": "0.3.0",
-    "private": true,
-    "description": "A library that serailizes and deserializes feature files",
-    "main": "barrow.js",
-    "scripts": {
-        "test": "./node_modules/.bin/cucumber.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/seeq12/barrow.git"
-    },
-    "dependencies": {
-        "cucumber-js": "git+https://github.com/seeq12/cucumber-js.git#ntj-remove-tests",
-        "ejs": ">= 0.0.1"
-    },
-    "author": "Nikhil Joy <nikhil.joy@seeq.com>"
-}
+ {
+     "name": "barrow",
+     "version": "0.4.0",
+     "private": true,
+     "description": "A library that serailizes and deserializes feature files",
+     "main": "barrow.js",
+     "scripts": {
+         "test": "./node_modules/.bin/cucumber.js"
+     },
+     "repository": {
+         "type": "git",
+         "url": "git://github.com/seeq12/barrow.git"
+     },
+     "dependencies": {
+         "cucumber-js": "git+https://github.com/seeq12/cucumber-js.git",
+         "ejs": ">= 0.0.1"
+     },
+     "author": "Nikhil Joy <nikhil.joy@seeq.com>"
+ }
