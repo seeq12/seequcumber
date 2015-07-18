@@ -1,6 +1,6 @@
  {
      "name": "seequcumber",
-     "version": "0.4.2",
+     "version": "0.4.3",
      "private": false,
      "description": "A tool to facilitate manual testing with Cucumber",
      "main": "seequcumber.js",
