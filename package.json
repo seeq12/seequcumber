@@ -1,8 +1,8 @@
  {
      "name": "barrow",
-     "version": "0.4.0",
+     "version": "0.4.1",
      "private": true,
-     "description": "A library that serailizes and deserializes feature files",
+     "description": "A tool to facilitate manual testing with Cucumber",
      "main": "barrow.js",
      "scripts": {
          "test": "./node_modules/.bin/cucumber.js"
@@ -12,7 +12,7 @@
          "url": "git://github.com/seeq12/barrow.git"
      },
      "dependencies": {
-         "cucumber-js": "git+https://github.com/seeq12/cucumber-js.git#sq-v0.5.2",
+         "cucumber": ">= 0.5.2",
          "ejs": ">= 0.0.1"
      },
      "author": "Nikhil Joy <nikhil.joy@seeq.com>"
