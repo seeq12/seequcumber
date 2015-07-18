@@ -59,7 +59,7 @@ function Deserializer(directory) {
         },
         addTestResults: function addTestResults(features) {
             features.syncForEach(function(feature) {
-                var scenarios = feature.getFeatures();
+                var scenarios = feature.getFeatureElements();
                 scenarios.syncForEach(function(scenario) {
                     var steps = scenario.getSteps();
                     steps.syncForEach(function(step) {

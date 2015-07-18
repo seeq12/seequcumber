@@ -203,7 +203,7 @@ function writeDir(index, htmlOut, id) {
 
 function writeFeature(feature, htmlOut, id){
     var rtnObj = {'state': 'pass', 'isManual': false};
-    var scenarios = feature.getFeatures();
+    var scenarios = feature.getFeatureElements();
     var mCounter = 0;
     scenarios.syncForEach(function(scenario) {
         var payload = writeScenario(scenario, false);
