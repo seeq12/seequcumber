@@ -1,16 +1,16 @@
-Barrow
-======
+Seequcumber
+===========
 
 Description
 -----------
-* Barrow aims to enable a manual testing framework through Behavior Driven Development.
-* By utilizing Cucumber feature files to provide scenarios for manual features that need to be tested, Barrow is an add-on to Cucumber.js
-* Barrow utilizes Cucumber to de-serialize the feature files and subsequently generates a HTML report, containing results of all the Feature files containing manual scenarios, with an overall test status summary table.
+* Seequcumber aims to enable a manual testing framework through Behavior Driven Development.
+* By utilizing Cucumber feature files to provide scenarios for manual features that need to be tested, Seequcumber is an add-on to Cucumber.js
+* Seequcumber utilizes Cucumber to de-serialize the feature files and subsequently generates a HTML report, containing results of all the Feature files containing manual scenarios, with an overall test status summary table.
 
 Feature File Formatting
 -----------------------
 
-Barrow de-serializes and serializes scenarios from Feature files that are meant for manual testing.
+Seequcumber de-serializes and serializes scenarios from Feature files that are meant for manual testing.
 
 For this, when a Feature file is written, a scenario must have the tag `@manual` in order for the serializer to process it, and deduce the state for that particular Feature file.
 
@@ -32,18 +32,18 @@ Every Scenario must contain steps that have a test result table attached to it b
 
 Usage
 -----
-Barrow is an npm module, and thus so, it should be included in your dependencies for `package.json` 
+Seequcumber is an npm module, and thus so, it should be included in your dependencies for `package.json` 
 
     "devDependencies": {
-        "barrow": "git+https://github.com/seeq12/barrow.git
+        "seequcumber": "git+https://github.com/seeq12/seequcumber.git
      }
 
 It should then be instantiated in your Javascript file.
 
-    var Barrow = require('barrow')
-    var barrow = new Barrow()
+    var Seequcumber = require('seequcumber')
+    var seequcumber = new Seequcumber()
 
-The Barrow module has three in-built commands:
+The Seequcumber module has three in-built commands:
 
 * `deserializer`
 * `serializer`

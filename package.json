@@ -1,15 +1,15 @@
  {
-     "name": "barrow",
+     "name": "seequcumber",
      "version": "0.4.2",
      "private": true,
      "description": "A tool to facilitate manual testing with Cucumber",
-     "main": "barrow.js",
+     "main": "seequcumber.js",
      "scripts": {
          "test": "./node_modules/.bin/cucumber.js"
      },
      "repository": {
          "type": "git",
-         "url": "git://github.com/seeq12/barrow.git"
+         "url": "git://github.com/seeq12/seequcumber.git"
      },
      "dependencies": {
          "cucumber": ">= 0.5.2",

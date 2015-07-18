@@ -2,13 +2,13 @@
 
 var fs = require('fs');
 var ejs = require('ejs');
-var barrow = {
-    deserializer: require('./seequmber/deserializer'),
-    serializer: require('./seequmber/serializer'),
+var seequcumber = {
+    deserializer: require('./lib/deserializer'),
+    serializer: require('./lib/serializer'),
     renderHTML: function renderHTML(payload) {
         var directories = payload.dirs;
         var version = payload.version;
-        var ejsString = fs.readFileSync(__dirname + '/seequmber/serializer.ejs').toString();
+        var ejsString = fs.readFileSync(__dirname + '/lib/serializer.ejs').toString();
         var html = '';
         var data = {
             features: [],
@@ -17,7 +17,7 @@ var barrow = {
         };
         directories.forEach(function(directory) {
             var fileArray = directory.split('/');
-            var deserializer = new barrow.deserializer(directory);
+            var deserializer = new seequcumber.deserializer(directory);
             var features = deserializer.deserialize();
             if (features) {
                 data.features.push(features);
@@ -32,4 +32,4 @@ var barrow = {
         return html;
     }
 };
-module.exports = barrow;
+module.exports = seequcumber;
