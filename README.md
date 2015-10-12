@@ -3,16 +3,22 @@ Seequcumber
 
 Description
 -----------
-* Seequcumber aims to enable a manual testing framework through Behavior Driven Development.
-* By utilizing Cucumber feature files to provide scenarios for manual features that need to be tested, Seequcumber is an add-on to Cucumber.js
-* Seequcumber utilizes Cucumber to de-serialize the feature files and subsequently generates a HTML report, containing results of all the Feature files containing manual scenarios, with an overall test status summary table.
+* Seequcumber aims to enable a manual testing framework through Behavior Driven
+  Development.
+* By utilizing Cucumber feature files to provide scenarios for manual features
+  that need to be tested, Seequcumber is an add-on to Cucumber.js
+* Seequcumber utilizes Cucumber to de-serialize the feature files and
+  subsequently generates a HTML report, containing results of all the Feature
+  files containing manual scenarios, with an overall test status summary table.
 
 Feature File Formatting
 -----------------------
 
 Seequcumber de-serializes and serializes scenarios from Feature files that are meant for manual testing.
 
-For this, when a Feature file is written, a scenario must have the tag `@manual` in order for the serializer to process it, and deduce the state for that particular Feature file.
+For this, when a Feature file is written, a scenario must have the tag
+`@manual` in order for the serializer to process it, and deduce the state for
+that particular Feature file.
 
 **Example**:
 
@@ -20,7 +26,9 @@ For this, when a Feature file is written, a scenario must have the tag `@manual`
     Scenario: ...
         When ...
         Then ...
-Every Scenario must contain steps that have a test result table attached to it below. Otherwise, the step would be deemed **incomplete**. Test results should be attached to steps as follows:
+Every Scenario must contain steps that have a test result table attached to it
+below. Otherwise, the step would be deemed **incomplete**. Test results should
+be attached to steps as follows:
 
     When ...
         |<Result>|<Version>|<Tester>|<Defect>|
@@ -32,16 +40,26 @@ Every Scenario must contain steps that have a test result table attached to it b
 
 Usage
 -----
-Seequcumber is an npm module, and thus so, it should be included in your dependencies for `package.json` 
+Seequcumber is available as an npm module.
 
-    "devDependencies": {
-        "seequcumber": "git+https://github.com/seeq12/seequcumber.git
-     }
+Install globally with:
+
+``` shell
+$ npm install -g seequcumber
+```
+
+Install as a development dependency of your application with:
+
+``` shell
+$ npm install --save-dev seequcumber
+```
 
 It should then be instantiated in your Javascript file.
 
-    var Seequcumber = require('seequcumber')
-    var seequcumber = new Seequcumber()
+``` javascript
+var Seequcumber = require('seequcumber')
+var seequcumber = new Seequcumber()
+```
 
 The Seequcumber module has three in-built commands:
 
@@ -55,10 +73,12 @@ The Seequcumber module has three in-built commands:
 
 *Functions*: 
 
-* `.deserialize()`: calls all the other functions and returns collection of all Feature files as an object in memory
+* `.deserialize()`: calls all the other functions and returns collection of all
+  Feature files as an object in memory
 * `.files()`: returns array of names of all Feature files in a directory
 * `.getSources()`: returns array of all Feature files read into memory
-* `.readFeatures()`: feeds in array of Feature files as String and uses Cucumber to parse into Feature file objects, and stores it in memory
+* `.readFeatures()`: feeds in array of Feature files as String and uses
+  Cucumber to parse into Feature file objects, and stores it in memory
 * `.getFeatures()`: returns collection of all Feature files as an object in memory
 * `.addTestResults()`: adds test result object in a test result table to each step
 
@@ -79,9 +99,12 @@ The Seequcumber module has three in-built commands:
 * `.writeStep()`: returns stringified Step object
 * `.writeRawTable()`: returns stringified data table object
 * `.writeTest()`: returns stringified test result object
-* `.checkForDescription()`: checks if Cucumber AST object has a non-empty description object, and then calls `.writeDescription()`
-* `.checkForBackground()`: checks if Cucumber AST object has a non-empty background object, and then calls `.writeBackground()`
-* `.writeFirstLine()`: returns string that contains the Cucumber AST object's keyword, and name properties
+* `.checkForDescription()`: checks if Cucumber AST object has a non-empty
+  description object, and then calls `.writeDescription()`
+* `.checkForBackground()`: checks if Cucumber AST object has a non-empty
+  background object, and then calls `.writeBackground()`
+* `.writeFirstLine()`: returns string that contains the Cucumber AST object's
+  keyword, and name properties
 
 **The `renderHTML` function**
 
