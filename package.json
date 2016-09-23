@@ -9,8 +9,8 @@
         "url": "git://github.com/seeq12/seequcumber.git"
     },
     "dependencies": {
-        "cucumber": "0.7.0",
-        "ejs": "0.0.1"
+        "cucumber": "0.10.4",
+        "ejs": "2.5.2"
     },
     "maintainers": [
         {
