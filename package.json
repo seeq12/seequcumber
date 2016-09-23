@@ -1,6 +1,6 @@
 {
     "name": "seequcumber",
-    "version": "0.4.8",
+    "version": "0.4.9",
     "private": false,
     "description": "A tool to facilitate manual testing with Cucumber",
     "main": "seequcumber.js",
@@ -9,8 +9,8 @@
         "url": "git://github.com/seeq12/seequcumber.git"
     },
     "dependencies": {
-        "cucumber": ">= 0.7.0",
-        "ejs": ">= 0.0.1"
+        "cucumber": "0.7.0",
+        "ejs": "0.0.1"
     },
     "maintainers": [
         {
@@ -21,6 +21,7 @@
             "name": "Nikhil Joy"
         }
     ],
+    "license": "MIT",
     "licenses": [
         {
             "type": "MIT",
