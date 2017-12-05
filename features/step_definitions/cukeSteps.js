@@ -2,22 +2,23 @@
 var assert = require('assert');
 
 module.exports = function() {
-    this.World = require('../support/cukeWorld').World;
     this.Given(/^that cucumber-js is installed$/, function(callback) {
-        console.log(this.directory);
         this.initializeDeserializer(this.directory);
         assert.notStrictEqual(this.deserializer, undefined, 'Deserializer should be initialized');
         callback();
     });
+    
     this.Given(/^there are sample feature files$/, function(callback) {
         assert.notEqual(this.deserializer.files(this.directory).length, 0, 'deserializer files should not be empty');
         callback();
     });
+
     this.When(/^the deserializer is called$/, function(callback) {
         this.deserializer.readFeatures();
         this.features = this.deserializer.getFeatures();
         callback();
     });
+
     this.Then(/^the feature files are loaded$/, function(callback) {
         this.feature = this.features.getAtIndex(0);
         callback();

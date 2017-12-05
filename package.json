@@ -4,13 +4,16 @@
     "private": false,
     "description": "A tool to facilitate manual testing with Cucumber",
     "main": "seequcumber.js",
+    "scripts": {
+        "test": "cucumber-js"
+    },
     "repository": {
         "type": "git",
         "url": "git://github.com/seeq12/seequcumber.git"
     },
     "dependencies": {
         "cucumber": "0.10.4",
-        "ejs": "2.5.2"
+        "ejs": "2.5.7"
     },
     "maintainers": [
         {
