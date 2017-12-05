@@ -1,8 +1,12 @@
 'use strict';
 
-var Deserializer = require('../../seequmber/deserializer');
+var Deserializer = require('../../lib/deserializer');
 
-var cukeWorld = function(callback) {
+module.exports = function() {
+    this.World = cukeWorld;
+};
+
+function cukeWorld() {
     this.directory = __dirname + '/../test/';
     this.deserializer = undefined;
     this.features = undefined;
@@ -10,7 +14,4 @@ var cukeWorld = function(callback) {
     this.initializeDeserializer = function(directory) {
         this.deserializer = new Deserializer(directory);
     };
-    callback();
-};
-
-module.exports.World = cukeWorld;
+}

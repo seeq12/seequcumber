@@ -128,3 +128,24 @@ The following third-party libraries are used by this module:
 
 * cucumber-js: https://github.com/cucumber/cucumber-js -  to handle parsing of Cucumber Feature files
 * ejs: https://github.com/tj/ejs - for dynamic HTML processing of multiple Javascript objects
+
+
+
+
+
+Seequcumber Development
+-----------------------
+
+Clone the repo and install dependencies:
+
+``` shell
+git clone https://github.com/seeq12/seequcumber.git
+cd seequcumber
+npm install
+```
+
+Run the tests:
+
+``` shell
+npm test
+```
