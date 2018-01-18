@@ -34,9 +34,9 @@ be attached to steps as follows:
         |<Result>|<Version>|<Tester>|<Defect>|
 **Results** can be:
 
-* PASS
-* FAIL
-* SKIPPED
+* PASSED (or PASS)
+* FAILED (or FAIL)
+* SKIPPED (or SKIP)
 
 Usage
 -----
