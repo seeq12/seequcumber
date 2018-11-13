@@ -8,6 +8,9 @@
   "repository": "https://github.com/YOUR_GITHUB_USER_NAME/seequcumber",
   "license": "MIT",
   "keywords": [],
+  "bin": {
+    "seequcumber": "build/main/index.js"
+  },
   "scripts": {
     "info": "npm-scripts-info",
     "build": "run-s clean && run-p build:*",
