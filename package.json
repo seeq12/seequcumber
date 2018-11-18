@@ -54,6 +54,7 @@
     "node": ">=8.9"
   },
   "dependencies": {
+    "clime": "^0.5.10",
     "sha.js": "^2.4.11"
   },
   "devDependencies": {
