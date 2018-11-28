@@ -1,7 +1,22 @@
 #!/usr/bin/env node
 
-export * from './lib/async';
-export * from './lib/hash';
-export * from './lib/number';
+import glob from 'glob';
+const Glob = glob.Glob;
+import { getGherkinDocument } from './lib/featureProcessor';
 
-console.log("Hello Elise!");
+async function main(): Promise<void> {
+  // TODO pass in arguments from command line
+  
+  // read all features files recursively
+  const pattern = "**/testdata/.feature*";
+	const match = new Glob(pattern, (er, matches) => {
+    er?   console.log(er.message) : console.log(matches); 
+    return matches;
+    
+   });
+  
+   await getGherkinDocument(match.found);
+  
+}
+
+main();

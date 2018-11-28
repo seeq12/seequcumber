@@ -21,7 +21,7 @@
     "fix:tslint": "tslint --fix --project .",
     "test": "run-s build test:*",
     "test:lint": "tslint --project . && prettier \"src/**/*.ts\" --list-different",
-    "test:unit": "nyc --silent ava",
+    "test:unit": "jest",
     "watch": "run-s clean build:main && run-p \"build:main -- -w\" \"test:unit -- --watch\"",
     "cov": "run-s build test:unit cov:html && opn coverage/index.html",
     "cov:html": "nyc report --reporter=html",
@@ -54,33 +54,33 @@
     "node": ">=8.9"
   },
   "dependencies": {
-    "sha.js": "^2.4.11"
+    "@types/glob": "^7.1.1",
+    "@types/long": "^4.0.0",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.10",
+    "cucumber-messages": "^2.1.1",
+    "glob": "^7.1.3"
   },
   "devDependencies": {
-    "ava": "1.0.0-beta.7",
+    "@types/jest": "^23.3.9",
+    "chai": "^4.2.0",
     "codecov": "^3.1.0",
+    "cucumber": "0.10.4",
     "cz-conventional-changelog": "^2.1.0",
     "gh-pages": "^2.0.0",
+    "gherkin": "^6.0.15",
+    "jest": "^23.6.0",
     "npm-run-all": "^4.1.3",
-    "nyc": "^13.0.1",
     "opn-cli": "^3.1.0",
     "prettier": "^1.14.3",
     "standard-version": "^4.4.0",
     "trash-cli": "^1.4.0",
+    "ts-jest": "^23.10.5",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-immutable": "^4.7.0",
     "typedoc": "^0.13.0",
-    "typescript": "^3.0.3"
-  },
-  "ava": {
-    "failFast": true,
-    "files": [
-      "build/main/**/*.spec.js"
-    ],
-    "sources": [
-      "build/main/**/*.js"
-    ]
+    "typescript": "^3.1.6"
   },
   "config": {
     "commitizen": {
@@ -90,9 +90,7 @@
   "prettier": {
     "singleQuote": true
   },
-  "nyc": {
-    "exclude": [
-      "**/*.spec.js"
-    ]
+  "jest": {
+    "preset": "ts-jest"
   }
 }
