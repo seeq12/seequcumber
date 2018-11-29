@@ -15,9 +15,9 @@ export function parseFeatureFiles(...directory: string[]): Stream.Readable {
   const options = {
     includeGherkinDocument: true,
     includePickles: false,
-    includeSource: false,
-  }
-  return fromPaths(directory,  options);
+    includeSource: false
+  };
+  return fromPaths(directory, options);
 }
 
 /**
@@ -48,7 +48,7 @@ export async function getGherkinDocument(
 ): Promise<IGherkinDocument> {
   const messages = await streamToArray(parseFeatureFiles(...directory));
   const gherkinMessage = messages.find(message => !!message);
-  return gherkinMessage? gherkinMessage.gherkinDocument : undefined;
+  return gherkinMessage ? gherkinMessage.gherkinDocument : undefined;
 }
 
 /**
@@ -58,10 +58,9 @@ export async function getGherkinDocument(
  */
 export async function findAllFeatureFiles(
   directory: string
-  ): Promise<string[]> {
-    const pattern =   directory + "/**/*.feature";
-    const globAsync = util.promisify(glob);
-    const files =  await globAsync(pattern);
-    return files;
+): Promise<string[]> {
+  const pattern = directory + '/**/*.feature';
+  const globAsync = util.promisify(glob);
+  const files = await globAsync(pattern);
+  return files;
 }
-
