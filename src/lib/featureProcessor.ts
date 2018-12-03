@@ -3,6 +3,8 @@ import { fromPaths } from 'gherkin';
 import glob from 'glob';
 import Wrapper = io.cucumber.messages.Wrapper;
 import IGherkinDocument = io.cucumber.messages.IGherkinDocument;
+import IFeature = io.cucumber.messages.IFeature;
+import IScenario = io.cucumber.messages.IScenario;
 import * as Stream from 'stream';
 import * as util from 'util';
 import * as _ from 'lodash';
@@ -40,7 +42,8 @@ export async function streamToArray(
 }
 
 /**
- * Transform a list of feature files into a list of Gherkin Documents
+ * Transform a list of feature files into a sorted list of Gherkin Documents 
+ *      Sort attributes: feature.name,scenario.name
  * @param directory List of directories with feature files
  * @returns         List of Gherkin Documents
  */
@@ -67,4 +70,11 @@ export async function findAllFeatureFiles(
   const files = await globAsync(pattern);
   return files;
 }
+
+export function getScenariosFromFeature (feature: IFeature): IScenario[] {
+  return feature.children
+      .map(child => child.scenario)
+      .filter(scenario => !!scenario);
+}
+
 
