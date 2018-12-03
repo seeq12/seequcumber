@@ -5,6 +5,7 @@ import Wrapper = io.cucumber.messages.Wrapper;
 import IGherkinDocument = io.cucumber.messages.IGherkinDocument;
 import * as Stream from 'stream';
 import * as util from 'util';
+import * as _ from 'lodash';
 
 /**
  * Parse a feature file into a Stream of cucumber messages
@@ -21,7 +22,7 @@ export function parseFeatureFiles(...directory: string[]): Stream.Readable {
 }
 
 /**
- * Transform a Stream of cucumber messages into an Array
+ * Transform a Stream of cucumber messages into a list of messages
  * @param readableStream  Stream of cucumber messages
  * @returns               List of cucumber messages
  */
@@ -39,16 +40,18 @@ export async function streamToArray(
 }
 
 /**
- * Parse a feature file into a Gherkin Document
+ * Transform a list of feature files into a list of Gherkin Documents
  * @param directory List of directories with feature files
- * @returns         Gherkin Document
+ * @returns         List of Gherkin Documents
  */
-export async function getGherkinDocument(
+export async function getGherkinDocuments(
   ...directory: string[]
-): Promise<IGherkinDocument> {
+): Promise<IGherkinDocument[]> {
   const messages = await streamToArray(parseFeatureFiles(...directory));
-  const gherkinMessage = messages.find(message => !!message);
-  return gherkinMessage ? gherkinMessage.gherkinDocument : undefined;
+  const validDocuments = messages
+    .map(message => message.gherkinDocument)
+    .filter(document => !!document && !!document.feature)
+  return _.orderBy(validDocuments, ['feature.name', 'scenario.name']);
 }
 
 /**
@@ -64,3 +67,4 @@ export async function findAllFeatureFiles(
   const files = await globAsync(pattern);
   return files;
 }
+
