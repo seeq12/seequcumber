@@ -5,7 +5,7 @@ import Wrapper = io.cucumber.messages.Wrapper;
 import IFeature = io.cucumber.messages.IFeature;
 import IScenario = io.cucumber.messages.IScenario;
 import * as Stream from 'stream';
-import * as util from 'util';
+import { promisify } from 'util';
 import * as _ from 'lodash';
 
 /**
@@ -70,7 +70,7 @@ export async function findAllFeatureFiles(
   directory: string
 ): Promise<string[]> {
   const pattern = directory + '/**/*.feature';
-  const globAsync = util.promisify(glob);
+  const globAsync = promisify(glob);
   const files = await globAsync(pattern);
   return files;
 }
