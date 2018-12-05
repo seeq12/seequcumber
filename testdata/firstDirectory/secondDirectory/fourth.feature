@@ -12,7 +12,7 @@ Feature: Journal Entry Access
     And the workbook has a journal entry
     And I should not be able to edit or delete the entry
 
-  Scenario Outline: Edit journal entry in an Edit/Full Control workbook
+  Scenario: Edit journal entry in an Edit/Full Control workbook
     Given a workbook that gives "<access_level>" access to Everyone
     And the workbook has a journal entry
     And that Seeq is running in the browser as "nonAdminJournalUser"
