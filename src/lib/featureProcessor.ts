@@ -1,24 +1,46 @@
-import { io } from 'cucumber-messages';
-import { fromPaths } from 'gherkin';
-import glob from 'glob';
+import * as _ from "lodash";
+import * as Stream from "stream";
+import { findAllFilesForPattern } from "./fileUtilities";
+import { fromPaths } from "gherkin";
+import { io } from "cucumber-messages";
 import Wrapper = io.cucumber.messages.Wrapper;
-import IGherkinDocument = io.cucumber.messages.IGherkinDocument;
-import * as Stream from 'stream';
-import * as util from 'util';
-import * as _ from 'lodash';
+import IFeature = io.cucumber.messages.IFeature;
+import IScenario = io.cucumber.messages.IScenario;
+
+/**
+ * Transform a list of feature files into a sorted list of Gherkin Features
+ *      Sort attributes: feature.name,scenario.name
+ * @param directory Root directories to search recursively for feature files
+ * @returns         List of Gherkin Features
+ */
+export async function hydrateFeatures(
+  rootDirectory: string
+): Promise<IFeature[]> {
+  const files = await findAllFeatureFiles(rootDirectory);
+  const messages = await streamToArray(parseFeatureFiles(files));
+  const validFeatures = messages
+    //extract documents
+    .map(message => message.gherkinDocument)
+    //keep only valid features
+    .filter(document => !!document && !!document.feature)
+    //extract features
+    .map(document => document.feature);
+  return _.orderBy(validFeatures, ["name", "scenario.name"]);
+
+}
 
 /**
  * Parse a feature file into a Stream of cucumber messages
- * @param directory    List of directories with feature files
- * @returns            Stream of cucumber messages
+ * @param featureFiles    List of feature files
+ * @returns               Stream of cucumber messages
  */
-export function parseFeatureFiles(...directory: string[]): Stream.Readable {
+export function parseFeatureFiles(featureFiles: string[]): Stream.Readable {
   const options = {
     includeGherkinDocument: true,
     includePickles: false,
     includeSource: false
   };
-  return fromPaths(directory, options);
+  return fromPaths(featureFiles, options);
 }
 
 /**
@@ -32,39 +54,20 @@ export async function streamToArray(
   return new Promise<Wrapper[]>(
     (resolve: (wrappers: Wrapper[]) => void, reject: (err: Error) => void) => {
       const items: Wrapper[] = [];
-      readableStream.on('data', items.push.bind(items));
-      readableStream.on('error', (err: Error) => reject(err));
-      readableStream.on('end', () => resolve(items));
+      readableStream.on("data", items.push.bind(items));
+      readableStream.on("error", (err: Error) => reject(err));
+      readableStream.on("end", () => resolve(items));
     }
   );
 }
 
 /**
- * Transform a list of feature files into a list of Gherkin Documents
- * @param directory List of directories with feature files
- * @returns         List of Gherkin Documents
- */
-export async function getGherkinDocuments(
-  ...directory: string[]
-): Promise<IGherkinDocument[]> {
-  const messages = await streamToArray(parseFeatureFiles(...directory));
-  const validDocuments = messages
-    .map(message => message.gherkinDocument)
-    .filter(document => !!document && !!document.feature)
-  return _.orderBy(validDocuments, ['feature.name', 'scenario.name']);
-}
-
-/**
  * Recursively find all features in a root folder
- * @param directory Root folder (example: /Users/Me/testdata)
- * @returns Arrays of  feature files
+ * @param directory Root folder (example: /testdata)
+ * @returns Arrays of feature files
  */
 export async function findAllFeatureFiles(
   directory: string
 ): Promise<string[]> {
-  const pattern = directory + '/**/*.feature';
-  const globAsync = util.promisify(glob);
-  const files = await globAsync(pattern);
-  return files;
+  return await findAllFilesForPattern(directory, "/**/*.feature");
 }
-
