@@ -5,7 +5,6 @@ import { fromPaths } from "gherkin";
 import { io } from "cucumber-messages";
 import Wrapper = io.cucumber.messages.Wrapper;
 import IFeature = io.cucumber.messages.IFeature;
-import IScenario = io.cucumber.messages.IScenario;
 
 /**
  * Transform a list of feature files into a sorted list of Gherkin Features
@@ -13,7 +12,7 @@ import IScenario = io.cucumber.messages.IScenario;
  * @param directory Root directories to search recursively for feature files
  * @returns         List of Gherkin Features
  */
-export async function hydrateFeatures(
+export async function getFeaturesFromFiles(
   rootDirectory: string
 ): Promise<IFeature[]> {
   const files = await findAllFeatureFiles(rootDirectory);

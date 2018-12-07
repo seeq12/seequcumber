@@ -1,6 +1,6 @@
 import {
   findAllFeatureFiles,
-  hydrateFeatures,
+  getFeaturesFromFiles,
   parseFeatureFiles,
   streamToArray
 } from "./featureProcessor";
@@ -17,12 +17,12 @@ test("stream to array", async () => {
 });
 
 test("read and parse good.feature file", async () => {
-  const result = await hydrateFeatures("./test_data");
+  const result = await getFeaturesFromFiles("./test_data");
   expect(result[0].name).toBe("Capsule Time");
 });
 
 test("error: parse inexistent feature file", async () => {
-  const result = await hydrateFeatures("./test_data/nope.feature");
+  const result = await getFeaturesFromFiles("./test_data/nope.feature");
   expect(result.length).toBe(0);
 });
 
@@ -39,14 +39,14 @@ test("error: look for files in an inexistent directory", async () => {
 });
 
 test("error: skip empty feature file ", async () => {
-  const result = await hydrateFeatures(
+  const result = await getFeaturesFromFiles(
     "./test_data/features/first_feature_dir"
   );
   expect(result.length).toBe(4);
 });
 
 test("get valid Gherkin Documents from list of feature files", async () => {
-  const features = await hydrateFeatures(
+  const features = await getFeaturesFromFiles(
     "./test_data/features/first_feature_dir"
   );
   expect(features[0].name).toBe("Capsule Time");

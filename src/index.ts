@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import { getGherkinDocuments } from "./lib/featureProcessor";
+import { getFeaturesFromFiles } from "./lib/featureProcessor";
 
 async function main(): Promise<void> {
-  await getGherkinDocuments("./test_data");
+  await getFeaturesFromFiles("./test_data");
 }
 
 main();
