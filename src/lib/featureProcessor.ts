@@ -1,20 +1,19 @@
-import { io } from 'cucumber-messages';
-import { fromPaths } from 'gherkin';
-import glob from 'glob';
+import * as _ from "lodash";
+import * as Stream from "stream";
+import { findAllFilesForPattern } from "./fileUtilities";
+import { fromPaths } from "gherkin";
+import { io } from "cucumber-messages";
 import Wrapper = io.cucumber.messages.Wrapper;
 import IFeature = io.cucumber.messages.IFeature;
 import IScenario = io.cucumber.messages.IScenario;
-import * as Stream from 'stream';
-import { promisify } from 'util';
-import * as _ from 'lodash';
 
 /**
- * Transform a list of feature files into a sorted list of Gherkin Features 
+ * Transform a list of feature files into a sorted list of Gherkin Features
  *      Sort attributes: feature.name,scenario.name
  * @param directory Root directories to search recursively for feature files
  * @returns         List of Gherkin Features
  */
-export async function getFeatures(
+export async function hydrateFeatures(
   rootDirectory: string
 ): Promise<IFeature[]> {
   const files = await findAllFeatureFiles(rootDirectory);
@@ -26,7 +25,9 @@ export async function getFeatures(
     .filter(document => !!document && !!document.feature)
     //extract features
     .map(document => document.feature);
-  return _.orderBy(validFeatures, ['name', 'scenario.name']);
+  return _.orderBy(validFeatures, ["name", "scenario.name"]);
+
+  //todo add warning if no files were found?
 }
 
 /**
@@ -54,9 +55,9 @@ export async function streamToArray(
   return new Promise<Wrapper[]>(
     (resolve: (wrappers: Wrapper[]) => void, reject: (err: Error) => void) => {
       const items: Wrapper[] = [];
-      readableStream.on('data', items.push.bind(items));
-      readableStream.on('error', (err: Error) => reject(err));
-      readableStream.on('end', () => resolve(items));
+      readableStream.on("data", items.push.bind(items));
+      readableStream.on("error", (err: Error) => reject(err));
+      readableStream.on("end", () => resolve(items));
     }
   );
 }
@@ -69,16 +70,11 @@ export async function streamToArray(
 export async function findAllFeatureFiles(
   directory: string
 ): Promise<string[]> {
-  const pattern = directory + '/**/*.feature';
-  const globAsync = promisify(glob);
-  const files = await globAsync(pattern);
-  return files;
+  return await findAllFilesForPattern(directory, "/**/*.feature");
 }
 
-export function getScenariosFromFeature (feature: IFeature): IScenario[] {
+export function getScenariosFromFeature(feature: IFeature): IScenario[] {
   return feature.children
-      .map(child => child.scenario)
-      .filter(scenario => !!scenario);
+    .map(child => child.scenario)
+    .filter(scenario => !!scenario);
 }
-
-

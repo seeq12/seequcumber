@@ -21,13 +21,13 @@ Feature: Capsule Time
       | PASS | 0.38.00-v201804032145 | Nikhila Albert |  |
       | PASS | 0.36.01-v201801241828 | Stefanie Moses |  |
     Then the "Capsule" element is selected
-      | PASS | 0.40.00-v201811141002 | Marius Oancea  |  |
+      | PASS | 0.40.00-v201811141001 | Marius Oancea  |  |
       | PASS | 0.38.02-v201806292342 | Austin Sharp   |  |
       | PASS | 0.38.01-v201806130941 | Megan Twyver   |  |
       | PASS | 0.38.00-v201804032145 | Nikhila Albert |  |
       | PASS | 0.36.01-v201801241828 | Stefanie Moses |  |
     And all capsules are listed in the Capsules Pane, right of the Details Pane
-      | PASS | 0.40.00-v201811141002 | Marius Oancea  |  |
+      | PASS | 0.40.00-v201811141000 | Marius Oancea  |  |
       | PASS | 0.38.02-v201806292342 | Austin Sharp   |  |
       | PASS | 0.38.01-v201806130941 | Megan Twyver   |  |
       | PASS | 0.38.00-v201804032145 | Nikhila Albert |  |

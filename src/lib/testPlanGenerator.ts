@@ -1,55 +1,64 @@
-import stringify  from 'csv-stringify/lib/sync';
-import { io } from 'cucumber-messages';
+import stringify from "csv-stringify/lib/sync";
+import { findAllFilesForPattern, writeContentToFile } from "./fileUtilities";
+import { getScenariosFromFeature } from "./featureProcessor";
+import { io } from "cucumber-messages";
 import IFeature = io.cucumber.messages.IFeature;
-import fs from 'fs';
-import path from 'path';
-import mkdirp from 'mkdirp';
-import {getScenariosFromFeature} from './featureProcessor';
-import * as util from 'util';
 
-export class TestCase {
-    constructor(public featureName:string,
-        public scenarioName:string,
-        public required:boolean,
-        public completed:boolean
-    ) {}   
+export interface TestCase {
+  featureName: string;
+  scenarioName: string;
+  isRequired: boolean;
 }
 
-export function generateStarterTestCases(features: IFeature[]) : TestCase[] {
-    const testCases : TestCase[] = [];
-    for (const feature of features) {
-       const scenarios = getScenariosFromFeature(feature);
-        for (const scenario of scenarios)   {
-           testCases.push(new TestCase(feature.name, scenario.name, false,false));
-        }     
-    }
-    return testCases;
+export interface TestPlan {
+  testPlanFilename: string;
+  testCases: TestCase[];
 }
 
-export async function exportToCsv(testCases: TestCase[], filename: string):Promise<void> {
-    const options = {
-        header: true,
-        columns:  {
-            featureName:'Feature',
-            scenarioName:'Scenario',
-            required:'Required',
-            completed:'Completed'
-        },
-        cast: { 
-            boolean: function(value:boolean) {
-                 if (value) return 'yes'
-                 else return 'no' ; 
-            }
-        }
+export function generateTestPlanFromFeatures(features: IFeature[]): TestCase[] {
+  const testCases: TestCase[] = [];
+  for (const feature of features) {
+    const scenarios = getScenariosFromFeature(feature);
+    for (const scenario of scenarios) {
+      const testCase = {
+        featureName: feature.name,
+        scenarioName: scenario.name,
+        isRequired: false
+      };
+      testCases.push(testCase);
     }
+  }
+  return testCases;
+}
 
-    const data = stringify(testCases, options);
+export async function findAllTestPlanFiles(
+  directory: string
+): Promise<string[]> {
+  return await findAllFilesForPattern(directory, "/**/*TestPlan*.csv");
+}
 
-    //validate target directory
-    const dir = path.dirname(filename);
-    const mkdirpAsyn = util.promisify(mkdirp);
-    await mkdirpAsyn(dir);
+export async function exportToCsv(
+  testCases: TestCase[],
+  filename: string
+): Promise<void> {
+  const data = stringifyTestCases(testCases);
+  return await writeContentToFile(filename, data);
+}
 
-    const asyncWriteFile = util.promisify(fs.writeFile);
-    return await asyncWriteFile(filename, data);
+function stringifyTestCases(testCases: TestCase[]): string {
+  const options = {
+    header: true,
+    columns: {
+      featureName: 'Feature',
+      scenarioName: 'Scenario',
+      required: 'Required'
+    },
+    cast: {
+      boolean: function(value: boolean) {
+        if (value) return 'yes';
+        else return 'no';
+      }
+    }
+  };
+  return stringify(testCases, options);
 }

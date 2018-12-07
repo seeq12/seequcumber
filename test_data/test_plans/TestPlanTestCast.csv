@@ -1,0 +1,4 @@
+Feature,Scenario,Required
+feature_a,scenario_a,yes
+feature_b,scenario_b,no
+feature_c,scenario_c,yes
