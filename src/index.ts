@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import { getFeaturesFromFiles } from "./lib/featureProcessor";
+import { getFeaturesFromDirectory } from "./lib/featureProcessor";
 
 async function main(): Promise<void> {
-  await getFeaturesFromFiles("./test_data");
+  await getFeaturesFromDirectory("./test_data");
 }
 
 main();

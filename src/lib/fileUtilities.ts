@@ -1,6 +1,8 @@
 import { promisify } from "util";
 import glob from "glob";
 
+const globAsync = promisify(glob);
+
 /**
  * Recursively find all files using a pattern in a root folder
  * @param directory Root folder
@@ -12,8 +14,6 @@ export async function findAllFilesForPattern(
   pattern: string
 ): Promise<string[]> {
   const fileFindingExpression = directory + pattern;
-  const globAsync = promisify(glob);
-  const files = await globAsync(fileFindingExpression);
-  return files;
+  return await globAsync(fileFindingExpression);
 }
 

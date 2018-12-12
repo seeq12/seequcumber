@@ -6,6 +6,7 @@ Feature: Formula Tool Variables
 
   Background:
     Given that Seeq is running in the browser
+    this is not gherkin
     ####
     '''
     And I add to the display pane three items relative to an asset
@@ -13,9 +14,3 @@ Feature: Formula Tool Variables
       """
       Test
       """
-    And the three details pane items appear as formula variables
-
-  Scenario: Function documentation formatting
-    When the Formula pane is expanded
-      | PASS | 0.38.00-v201804061001 | Tester One    |  |
-     
