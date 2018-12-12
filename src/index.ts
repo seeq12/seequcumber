@@ -1,9 +1,8 @@
 #!/usr/bin/env node
-
-import { hydrateFeatures } from './lib/featureProcessor';
+import { getFeaturesFromDirectory } from "./lib/featureProcessor";
 
 async function main(): Promise<void> {
-  await hydrateFeatures('');
+  await getFeaturesFromDirectory("./test_data");
 }
 
 main();

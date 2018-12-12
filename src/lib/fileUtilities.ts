@@ -4,6 +4,8 @@ import fs from "fs";
 import mkdirp from "mkdirp";
 import path from "path";
 
+const globAsync = promisify(glob);
+
 /**
  * Recursively find all files using a pattern in a root folder
  * @param directory Root folder
@@ -15,9 +17,7 @@ export async function findAllFilesForPattern(
   pattern: string
 ): Promise<string[]> {
   const fileFindingExpression = directory + pattern;
-  const globAsync = promisify(glob);
-  const files = await globAsync(fileFindingExpression);
-  return files;
+  return await globAsync(fileFindingExpression);
 }
 
 export async function writeContentToFile(filename: string, data: string) {

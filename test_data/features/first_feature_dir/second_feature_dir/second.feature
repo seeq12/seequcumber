@@ -15,18 +15,16 @@ Feature: Formula Tool Variables
 
   Scenario: Function documentation formatting
     When the Formula pane is expanded
-      | PASS | 0.38.00-v201804061001 | Megan Twyver    |  |
-      | PASS | 0.36.01-v201801170334 | Bryan Zimmerman |  |
-      | PASS | 0.36.00-v201711181534 | Mike Daly       |  |
+      | PASS | 0.38.00-v201804061001 | Tester One |  |
     And I type "overlap" into the function search input
-      | PASS | 0.38.00-v201804061001 | Megan Twyver    |  |
-      | PASS | 0.36.01-v201801170334 | Bryan Zimmerman |  |
-      | PASS | 0.36.00-v201711181534 | Mike Daly       |  |
+      | PASS | 0.38.00-v201804061001 | Test One |  |
+      | PASS | 0.36.01-v201801170334 | Test One |  |
+      | PASS | 0.36.00-v201711181534 | Test One |  |
     And I click on the "overlappedBy" function variation
-      | PASS | 0.38.00-v201804061001 | Megan Twyver    |  |
-      | PASS | 0.36.01-v201801170334 | Bryan Zimmerman |  |
-      | PASS | 0.36.00-v201711181534 | Mike Daly       |  |
+      | PASS | 0.38.00-v201804061001 | Test One |  |
+      | PASS | 0.36.01-v201801170334 | Test One |  |
+      | PASS | 0.36.00-v201711181534 | Test One |  |
     Then I see the description, and below it is a text diagram of input and output capsules, in monospaced font.
-      | PASS | 0.38.00-v201804061001 | Megan Twyver    |  |
-      | PASS | 0.36.01-v201801170334 | Bryan Zimmerman |  |
-      | PASS | 0.36.00-v201711181534 | Mike Daly       |  |
+      | PASS | 0.38.00-v201804061001 | Test One |  |
+      | PASS | 0.36.01-v201801170334 | Test One |  |
+      | PASS | 0.36.00-v201711181534 | Test One |  |

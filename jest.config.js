@@ -4,7 +4,7 @@ module.exports = {
     },
     testRegex: "^.+\\.spec\\.ts$",
     moduleFileExtensions: ["ts","js"],
-    collectCoverage: false,
+    collectCoverage: true,
     testEnvironment: "node"
 };
 
