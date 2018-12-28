@@ -1,5 +1,10 @@
-import { generateReleaseTestPlan } from "./releaseTestPlanGenerator";
-import { TestCase, sortTestCases } from "./testPlan";
+import { sortTestCases, TestCase } from "./testPlan";
+import {
+   generateReleaseTestPlan,
+   loadTestPlanFromFile,
+} from "./releaseTestPlanGenerator";
+
+const TEST_DATA_DIR = "./test_data";
 
 describe("releaseTestPlanGenerator", () => {
    const versionToTest = "0.40.00-v201811141000";
@@ -58,5 +63,25 @@ describe("releaseTestPlanGenerator", () => {
       expect(results[16]).toContain("Second Feature");
       expect(results[16]).toContain("Function documentation");
       expect(results[16]).toContain("story-2-AnotherGoodTestPlan");
+   });
+
+   it("throws error on invalid test plan", async () => {
+      try {
+         await loadTestPlanFromFile(
+            TEST_DATA_DIR + "/bad_test_plan/emptyTestPlan.csv"
+         );
+      } catch (error) {
+         expect(error.toString()).toContain("Cannot find test plan:");
+      }
+   });
+
+   it("throws error on invalid version to test", async () => {
+      try {
+         await loadTestPlanFromFile(
+            TEST_DATA_DIR + "/bad_test_plan/emptyVersionToTest.csv"
+         );
+      } catch (error) {
+         expect(error.toString()).toContain("Cannot find test plan:");
+      }
    });
 });

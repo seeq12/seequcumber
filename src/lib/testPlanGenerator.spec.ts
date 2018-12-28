@@ -1,8 +1,4 @@
-import {
-   generateTemplate,
-   generateTestCases,
-   loadTestPlanFromFile,
-} from "./testPlanGenerator";
+import { generateTemplate, generateTestCases } from "./testPlanGenerator";
 
 import { loadFeaturesFrom } from "./featureProcessor";
 import { TestPlan } from "./testPlan";
@@ -75,25 +71,5 @@ describe("testPlanGenerator", () => {
       expect(lines[3]).toContain(
          `${testCaseOne.featureName},${testCaseOne.scenarioName}`
       );
-   });
-
-   it("throws error on invalid test plan", async () => {
-      try {
-         await loadTestPlanFromFile(
-            TEST_DATA_DIR + "/bad_test_plan/emptyTestPlan.csv"
-         );
-      } catch (error) {
-         expect(error.toString()).toContain("Cannot find test plan:");
-      }
-   });
-
-   it("throws error on invalid version to test", async () => {
-      try {
-         await loadTestPlanFromFile(
-            TEST_DATA_DIR + "/bad_test_plan/emptyVersionToTest.csv"
-         );
-      } catch (error) {
-         expect(error.toString()).toContain("Cannot find test plan:");
-      }
    });
 });
