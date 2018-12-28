@@ -1,8 +1,4 @@
-import {
-   generateTemplate,
-   generateTestCases,
-   loadTestPlanFromFile,
-} from "./testPlanGenerator";
+import { generateTemplate, generateTestCases } from "./testPlanGenerator";
 
 import { loadFeaturesFrom } from "./featureProcessor";
 import { TestPlan } from "./testPlan";
@@ -10,6 +6,7 @@ import { exportTestPlan } from "./testPlanFormatter";
 
 const TEST_DATA_DIR = "./test_data";
 
+import { loadTestPlanFromFile } from "./releaseTestPlanGenerator";
 describe("testPlanGenerator", () => {
    const goodFeatureDir = TEST_DATA_DIR + "/features/first_feature_dir";
 
@@ -24,7 +21,7 @@ describe("testPlanGenerator", () => {
 
    const testCaseTwo = {
       featureName: "My Feature B",
-      scenarioName: "My Scenario a",
+      scenarioName: "My Scenario A",
       isRequired: false,
       requiredBy: "story-1234",
    };

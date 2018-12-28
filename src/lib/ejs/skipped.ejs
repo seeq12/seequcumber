@@ -1,0 +1,23 @@
+ <h2>Skipped</h2>
+    <% if (!!skip) { %>
+        <%  Object.keys(skip).forEach(function(key) { %>      
+            <div class="wrap-collabsible">
+                <input id="<%= key %>skip" class="toggle" type="checkbox">
+                <label for="<%= key %>skip" class="lbl-toggle skip"><%= key %></label>
+                <div class="collapsible-content">
+                    <div class="content-inner">
+                    <table>
+                        <% for (const feature of skip[key])  { -%>
+                            <% if (!!feature.scenarioName) { -%>
+                                <tr>
+                                    <td class="skip"><%= feature.scenarioName %></td>
+                                    <td class="skip"><%= feature.requiredBy %></td>
+                                </tr>
+                            <% } -%>
+                        <% } -%>             
+                    </table>
+                    </div>
+                </div>
+            </div>
+        <% }); -%>
+    <% } -%>

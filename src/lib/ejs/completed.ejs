@@ -1,0 +1,40 @@
+<h2>Completed </h2>
+    <h4>
+        <span class="fail legend">Fail</span> 
+        <span class="pass legend">Pass</span> 
+    </h4>
+  
+    <% if (!!completed) { %>
+        <%  Object.keys(completed).forEach(function(key) { -%>      
+            <div class="wrap-collabsible">
+                <% const thisFeature = completed[key].find(item => item.featureName === key && !item.scenarioName); -%>
+                            
+                <input id="<%= key %>Completed" class="toggle" type="checkbox">
+                <label for="<%= key %>Completed" class="lbl-toggle 
+                    <% if (thisFeature.status === "PASS") { -%>
+                    pass
+                    <% } else if (thisFeature.status === "FAIL") { -%>
+                    fail
+                    <% } -%>
+                    ">
+                    <%= key %></label>
+                <div class="collapsible-content">
+                    <div class="content-inner">
+                    <table>
+                        <% for (const feature of completed[key])  { -%>
+                            <% if (!!feature.scenarioName) { -%>
+                                <% const scenarioStatus = feature.status === "PASS" ? "pass" : "fail"; -%>
+                                <tr>
+                                    <td class="<%= scenarioStatus %>"><%= feature.featureName %></td>
+                                    <td class="<%= scenarioStatus %>"><%= feature.scenarioName %></td>
+                                    <td class="<%= scenarioStatus %>"><%= feature.requiredBy %></td>
+                                    <td class="<%= scenarioStatus %>"><%= feature.defects %></td>
+                                </tr>
+                            <% } -%>
+                        <% } -%>             
+                    </table>
+                    </div>
+                </div>
+            </div>
+        <% }); -%>
+    <% } -%>
