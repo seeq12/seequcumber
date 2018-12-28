@@ -1,11 +1,9 @@
-import * as _ from "lodash";
-import { findAllFilesForPattern } from "./fileUtilities";
-import { fromPaths } from "gherkin";
 import { io } from "cucumber-messages";
+import * as gherkinParser from "gherkin";
+import { sortBy, flatten } from "lodash";
+import { findAllFilesForPattern } from "./fileUtilities";
 import Wrapper = io.cucumber.messages.Wrapper;
 import IFeature = io.cucumber.messages.IFeature;
-
-const FEATURE_SORT_PATTERN =  ['name', 'scenario.name'];
 
 /**
  * Recursively traverses a directory to tranform all feature files into a sorted list of Gherkin Features
@@ -13,73 +11,82 @@ const FEATURE_SORT_PATTERN =  ['name', 'scenario.name'];
  * @param directory Root directories to search recursively
  * @returns         List of Gherkin Features
  */
-export async function getFeaturesFromDirectory(
-  rootDirectory: string
+export async function loadFeaturesFrom(
+   rootDirectory: string
 ): Promise<IFeature[]> {
+   const files = await findAllFeatureFiles(rootDirectory);
 
-  const files = await findAllFeatureFiles(rootDirectory);
-  const messages = await parseFeatureFiles(files);
+   const messages: Wrapper[] = flatten(
+      await Promise.all(files.map(file => parseFeatureFile(file)))
+   );
 
-  const errors = messages
-    //extract parsing errors
-    .filter(message => !!message.attachment && !!message.attachment.data)
-    //provide readable error message
-    .map(message => `File: ${message.attachment.source.uri}\n ${message.attachment.data}\n`);
+   const errors = messages
+      // extract parsing errors
+      .filter(message => !!message.attachment && !!message.attachment.data)
+      .map(
+         message =>
+            `File: ${message.attachment.source.uri}\r\n ${
+               message.attachment.data
+            }\r\n`
+      );
 
-  if  (errors.length > 0) {
-    throw new Error(`Gherkin Parsing Error\n${errors.join('\n')}`);
-  }
+   if (errors.length > 0) {
+      throw new Error(`Gherkin Parsing Error\r\n${errors.join("\r\n")}`);
+   }
 
-  const validFeatures = messages
-    //extract documents
-    .map(message => message.gherkinDocument)
-    //keep only valid features
-    .filter(document => !!document && !!document.feature)
-    //extract features
-    .map(document => document.feature);
+   if (!messages.length) {
+      throw new Error(`Feature file is empty: in ${rootDirectory}`);
+   }
 
-    return _.orderBy(validFeatures, FEATURE_SORT_PATTERN);
+   const validFeatures = messages
+      .map(message => message.gherkinDocument)
+      // keep only valid features
+      .filter(document => !!document && !!document.feature)
+      .map(document => document.feature);
+
+   return sortBy(validFeatures, "name", "scenario.name");
 }
-
-
 
 /**
  * Parse a feature file into a list of cucumber message wrappers
  * @param featureFiles    List of feature files
  * @returns               List of cucumber message wrappers
  */
-export async function parseFeatureFiles(featureFiles: string[]): Promise<Wrapper[]> {
-  const options = {
-    includeGherkinDocument: true,
-    includePickles: false,
-    includeSource: false
-  };
-  const messageStream = fromPaths(featureFiles, options);
+export async function parseFeatureFile(
+   featureFiles: string
+): Promise<Wrapper[]> {
+   const options = {
+      includeGherkinDocument: true,
+      includePickles: false,
+      includeSource: false,
+   };
 
-  // Transform Stream.Readable to Array
-  return await new Promise<Wrapper[]>(
-    (resolve: (wrappers: Wrapper[]) => void, reject: (error: Error) => void) => {
-      const messages: Wrapper[] = [];
-      messageStream.on('data', (message:Wrapper) => messages.push(message));
-      messageStream.on('error', (error: Error) => reject(error));
-      messageStream.on('end', () => resolve(messages));
-    }
-  );
+   // Parsing multiple paths triggers a race condition in gherkin-parser
+   // Parse one at a time
+   const messageStream = gherkinParser.fromPaths([featureFiles], options);
+
+   // Transform Stream.Readable to Array
+   return new Promise<Wrapper[]>(
+      (
+         resolve: (wrappers: Wrapper[]) => void,
+         reject: (error: Error) => void
+      ) => {
+         const messages: Wrapper[] = [];
+         messageStream.on(
+            "data",
+            (message: Wrapper) => !!message && messages.push(message)
+         );
+         messageStream.on("error", (error: Error) => reject(error));
+         messageStream.on("end", () => resolve(messages));
+      }
+   );
 }
 
 /**
  * Recursively find all features in a root folder
- * @param directory Root folder (example: /testdata)
+ * @param directory Root folder
  * @returns Arrays of feature files
  */
-export async function findAllFeatureFiles(
-  directory: string
-): Promise<string[]> {
-  return await findAllFilesForPattern(directory, "/**/*.feature");
-}
-
-export function getScenariosFromFeature(feature: IFeature): IScenario[] {
-  return feature.children
-    .map(child => child.scenario)
-    .filter(scenario => !!scenario);
+export function findAllFeatureFiles(directory: string): Promise<string[]> {
+   return findAllFilesForPattern(directory, "/**/*.feature");
 }
