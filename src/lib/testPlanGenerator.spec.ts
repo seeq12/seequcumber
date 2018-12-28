@@ -1,8 +1,7 @@
+import { exportTestPlan } from "./testPlanFormatter";
 import { generateTemplate, generateTestCases } from "./testPlanGenerator";
-
 import { loadFeaturesFrom } from "./featureProcessor";
 import { TestPlan } from "./testPlan";
-import { exportTestPlan } from "./testPlanFormatter";
 
 const TEST_DATA_DIR = "./test_data";
 

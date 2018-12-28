@@ -1,13 +1,13 @@
-import { io } from "cucumber-messages";
 import * as gherkinParser from "gherkin";
-import { sortBy, flatten } from "lodash";
 import { findAllFilesForPattern } from "./fileUtilities";
+import { flatten, sortBy } from "lodash";
+import { io } from "cucumber-messages";
 import Wrapper = io.cucumber.messages.Wrapper;
 import IFeature = io.cucumber.messages.IFeature;
 
 /**
  * Recursively traverses a directory to tranform all feature files into a sorted list of Gherkin Features
- *      Sort attributes: feature.name,scenario.name
+ *      Sort attributes: feature.name, scenario.name
  * @param directory Root directories to search recursively
  * @returns         List of Gherkin Features
  */

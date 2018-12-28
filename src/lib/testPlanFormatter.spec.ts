@@ -1,5 +1,5 @@
-import { TestPlan } from "./testPlan";
 import { exportTestPlan } from "./testPlanFormatter";
+import { TestPlan } from "./testPlan";
 
 describe("testPlaFormatter", () => {
    const version = "v201811141000";

@@ -1,4 +1,4 @@
-import { exportTestPlan } from "./testPlanFormatter";
+import { exportTestPlan as exportTestPlanToCsv } from "./testPlanFormatter";
 import { io } from "cucumber-messages";
 import { loadFeaturesFrom } from "./featureProcessor";
 import { TestCase } from "./testPlan";
@@ -17,7 +17,7 @@ export async function generateTemplate(
 ): Promise<string> {
    const features = await loadFeaturesFrom(featureDirectory);
    const testCases = generateTestCases(features);
-   return await exportTestPlan({
+   return await exportTestPlanToCsv({
       versionToTest,
       name: filename,
       testCases,
