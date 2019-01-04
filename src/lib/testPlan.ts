@@ -1,8 +1,12 @@
 import { sortBy } from "lodash";
+import { io } from "cucumber-messages";
+import IFeature = io.cucumber.messages.IFeature;
 
+export interface Feature extends IFeature {
+   filename: string;
+}
 export interface TestCase {
    featureName: string;
-   scenarioName: string;
    isRequired: boolean;
    requiredBy: string;
 }
@@ -17,7 +21,7 @@ export function testCaseExists(
    testCase: TestCase,
    testCases: TestCase[]
 ): boolean {
-   return findIndexForTestCase(testCase, testCases) > 0;
+   return findIndexForTestCase(testCase, testCases) >= 0;
 }
 
 export function findIndexForTestCase(
@@ -25,12 +29,10 @@ export function findIndexForTestCase(
    testCases: TestCase[]
 ): number {
    return testCases.findIndex(
-      item =>
-         item.featureName === testCase.featureName &&
-         item.scenarioName === testCase.scenarioName
+      item => item.featureName === testCase.featureName
    );
 }
 
 export function sortTestCases(testCases: TestCase[]): TestCase[] {
-   return sortBy(testCases, ["featureName", "scenarioName"]);
+   return sortBy(testCases, ["featureName"]);
 }

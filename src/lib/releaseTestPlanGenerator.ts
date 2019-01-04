@@ -2,7 +2,7 @@ import parse from "csv-parse/lib/sync";
 import { exportTestPlan } from "./testPlanFormatter";
 import {
    findAllFilesForPattern,
-   getFilename,
+   getFilename as getFilenameFromCsv,
    readContentFromFile,
 } from "./fileUtilities";
 import {
@@ -16,14 +16,15 @@ import {
 const RECORD_DELIMITER = ["\n", "\r\n", "\r"];
 
 /**
- * Iterate over multiple test plans to extract all common required test cases
- * and merge them into a consolidated release test plan
+ * Iterate over multiple feature test plans to extract all test cases
+ * and export them into a consolidated release test plan (csv format)
  * @param filename
- * @param testPlans
+ * @param versionToTest
+ * @param testPlanDir
  */
 export async function generateReleaseTestPlan(
    filename: string,
-   version: string,
+   versionToTest: string,
    testPlanDir: string
 ): Promise<string> {
    const files = await findTestPlanFiles(testPlanDir);
@@ -32,44 +33,44 @@ export async function generateReleaseTestPlan(
       files.map(filename => loadTestPlanFromFile(filename))
    );
 
+   // Multiple test plans might require the same test case
+   // which requires merging to consolidate their required status
    const mergedTestCases: TestCase[] = [];
+
    testPlans
       .filter(testPlan => !!testPlan.testCases)
       .map(testPlan => {
-         testPlan.testCases
-            .filter(testCase => !!testCase)
-            .map(testCase =>
-               mergeTestCase(
-                  testCase,
-                  getFilename(testPlan.name),
-                  mergedTestCases
-               )
-            );
+         testPlan.testCases.map(testCase =>
+            mergeTestCase(
+               testCase,
+               getFilenameFromCsv(testPlan.name),
+               mergedTestCases
+            )
+         );
       });
 
    const mergedTestPlan: TestPlan = {
       testCases: mergedTestCases,
       name: filename,
-      versionToTest: version,
+      versionToTest: versionToTest,
    };
    return await exportTestPlan(mergedTestPlan);
 }
 
 /**
- * Merge Test Case when it has already been required by another Test Plan
+ * Merge a Test Case when it has already been required by another Test Plan
  */
 export function mergeTestCase(
    testCase: TestCase,
    requiredByTestPlanName: string,
    mergedTestCases: TestCase[]
 ): void {
-   // Test case does not exists
+   // Test case does not exists, add it
    if (!testCaseExists(testCase, mergedTestCases)) {
       var newRequiredBy = testCase.isRequired ? requiredByTestPlanName : "";
 
       mergedTestCases.push({
          featureName: testCase.featureName,
-         scenarioName: testCase.scenarioName,
          isRequired: testCase.isRequired,
          requiredBy: newRequiredBy,
       });
@@ -81,8 +82,6 @@ export function mergeTestCase(
       );
 
       if (testCase.isRequired) {
-         mergedTestCases[existingTestCaseIndex].isRequired = true;
-
          if (mergedTestCases[existingTestCaseIndex].isRequired) {
             // Existing test case was required by another test plan, augment requiredBy with this one
             mergedTestCases[existingTestCaseIndex].requiredBy =
@@ -95,12 +94,11 @@ export function mergeTestCase(
                existingTestCaseIndex
             ].requiredBy = requiredByTestPlanName;
          }
+
+         // Ensure the test case is now required
+         mergedTestCases[existingTestCaseIndex].isRequired = true;
       }
    }
-}
-
-function findTestPlanFiles(directory: string): Promise<string[]> {
-   return findAllFilesForPattern(directory, "/**/*TestPlan*.csv");
 }
 
 /**
@@ -156,7 +154,7 @@ export async function loadTestCases(data: string): Promise<TestCase[]> {
          }
          return value;
       },
-      columns: ["featureName", "scenarioName", "isRequired", "requiredBy"],
+      columns: ["featureName", "isRequired", "requiredBy"],
       // The first 3 are not test cases (versionToTest header, versionToTest value, column headers),
       from_line: 4,
       skip_empty_lines: true,
@@ -166,4 +164,8 @@ export async function loadTestCases(data: string): Promise<TestCase[]> {
    const testPlanScenarios: TestCase[] = parse(data, options);
    const valid = testPlanScenarios.filter(item => !!item.featureName);
    return sortTestCases(valid);
+}
+
+function findTestPlanFiles(directory: string): Promise<string[]> {
+   return findAllFilesForPattern(directory, "/**/*TestPlan*.csv");
 }

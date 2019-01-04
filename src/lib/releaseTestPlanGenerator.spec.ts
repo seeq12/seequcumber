@@ -11,19 +11,16 @@ describe("releaseTestPlanGenerator", () => {
    const goodTestPlanDir = "./test_data/test_plans";
    const testCaseOne = {
       featureName: "My Feature A",
-      scenarioName: "My Scenario A",
       isRequired: true,
       requiredBy: "story-2",
    };
    const testCaseTwo = {
       featureName: "My Feature B",
-      scenarioName: "My Scenario a",
       isRequired: true,
       requiredBy: "story-2",
    };
    const testCaseThree = {
       featureName: "My Feature A",
-      scenarioName: "My Scenario b",
       isRequired: false,
       requiredBy: "story-2",
    };
@@ -37,13 +34,10 @@ describe("releaseTestPlanGenerator", () => {
 
       expect(sortedTestCases.length).toBe(3);
       expect(sortedTestCases[0].featureName).toBe(testCaseOne.featureName);
-      expect(sortedTestCases[0].scenarioName).toBe(testCaseOne.scenarioName);
 
       expect(sortedTestCases[1].featureName).toBe(testCaseThree.featureName);
-      expect(sortedTestCases[1].scenarioName).toBe(testCaseThree.scenarioName);
 
       expect(sortedTestCases[2].featureName).toBe(testCaseTwo.featureName);
-      expect(sortedTestCases[2].scenarioName).toBe(testCaseTwo.scenarioName);
    });
 
    it("generates test plans from directory of test plans", async () => {
@@ -56,13 +50,12 @@ describe("releaseTestPlanGenerator", () => {
       const results = testPlan.split("\n");
       expect(results[0]).toBe("Version To Test");
       expect(results[1]).toBe(versionToTest);
-      expect(results[2]).toBe("Feature,Scenario,Required,Required By");
-      expect(results[5]).toContain("First Feature");
-      expect(results[5]).toContain("Basic Capsule Time");
-      expect(results[5]).toContain("story-1-GoodTestPlan");
-      expect(results[16]).toContain("Second Feature");
-      expect(results[16]).toContain("Function documentation");
-      expect(results[16]).toContain("story-2-AnotherGoodTestPlan");
+      expect(results[2]).toBe("Feature,Required,Required By");
+      expect(results[3]).toContain("First Feature");
+      expect(results[3]).toContain("Story-1-GoodTestPlan");
+      expect(results[3]).toContain("Story-2-AnotherGoodTestPlan");
+      expect(results[6]).toContain("Third Feature");
+      expect(results[6]).toContain("Story-2-AnotherGoodTestPlan");
    });
 
    it("throws error on invalid test plan", async () => {

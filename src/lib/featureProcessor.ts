@@ -3,17 +3,18 @@ import { findAllFilesForPattern } from "./fileUtilities";
 import { flatten, sortBy } from "lodash";
 import { io } from "cucumber-messages";
 import Wrapper = io.cucumber.messages.Wrapper;
-import IFeature = io.cucumber.messages.IFeature;
+import { Feature } from "./testPlan";
+import path from "path";
 
 /**
  * Recursively traverses a directory to tranform all feature files into a sorted list of Gherkin Features
- *      Sort attributes: feature.name, scenario.name
+ *      sorted by the feature.name
  * @param directory Root directories to search recursively
  * @returns         List of Gherkin Features
  */
 export async function loadFeaturesFrom(
    rootDirectory: string
-): Promise<IFeature[]> {
+): Promise<Feature[]> {
    const files = await findAllFeatureFiles(rootDirectory);
 
    const messages: Wrapper[] = flatten(
@@ -38,13 +39,31 @@ export async function loadFeaturesFrom(
       throw new Error(`Feature file is empty: in ${rootDirectory}`);
    }
 
-   const validFeatures = messages
+   const validFeatures: Feature[] = messages
       .map(message => message.gherkinDocument)
       // keep only valid features
       .filter(document => !!document && !!document.feature)
-      .map(document => document.feature);
+      .map(document => {
+         return {
+            ...document.feature,
+            // Used to group features by their directory location
+            filename: formatFeatureName(document.uri),
+         };
+      });
 
-   return sortBy(validFeatures, "name", "scenario.name");
+   return sortBy(validFeatures, "filename");
+}
+
+function formatFeatureName(name: string): string {
+   return name
+      .replace(".feature", "")
+      .replace("features", "")
+      .replace("behavior", "")
+      .replace(new RegExp("\\.+", "g"), "")
+      .replace("manual", "")
+      .replace("test_data", "")
+      .replace(new RegExp("/+", "g"), "/")
+      .replace(new RegExp(`${path.sep}+`, "g"), path.sep);
 }
 
 /**

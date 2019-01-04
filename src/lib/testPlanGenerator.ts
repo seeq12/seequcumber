@@ -1,12 +1,9 @@
 import { exportTestPlan as exportTestPlanToCsv } from "./testPlanFormatter";
-import { io } from "cucumber-messages";
 import { loadFeaturesFrom } from "./featureProcessor";
-import { TestCase } from "./testPlan";
-import IFeature = io.cucumber.messages.IFeature;
-import IScenario = io.cucumber.messages.IScenario;
+import { TestCase, Feature } from "./testPlan";
 
 /**
- * Traverse a feature file directory, collect test cases (scenarios)
+ * Traverse a feature file directory, collect test cases
  * and write test plan template to csv file
  * @param features
  */
@@ -25,38 +22,15 @@ export async function generateTemplate(
 }
 
 /**
- * Generate a list of unique Test Cases (Scenarios) from a list of Features
+ * Generate a list of Features to be used as Test Cases
  * @param features
  */
-export function generateTestCases(features: IFeature[]): TestCase[] {
-   const testCases: TestCase[] = [];
-
-   features.map(feature => {
-      // Add the entire feature as the first test case
-      testCases.push({
-         featureName: feature.name,
+export function generateTestCases(features: Feature[]): TestCase[] {
+   return features.map(feature => {
+      return {
+         featureName: feature.filename,
          isRequired: false,
-         scenarioName: "",
          requiredBy: "",
-      });
-
-      // Add each scenario
-      const scenario = generateScenarios(feature);
-      scenario.map(scenario => {
-         const testCase = {
-            featureName: feature.name,
-            isRequired: false,
-            scenarioName: scenario.name,
-            requiredBy: "",
-         };
-         testCases.push(testCase);
-      });
+      };
    });
-   return testCases;
-}
-
-export function generateScenarios(feature: IFeature): IScenario[] {
-   return feature.children
-      .map(child => child.scenario)
-      .filter(scenario => !!scenario);
 }

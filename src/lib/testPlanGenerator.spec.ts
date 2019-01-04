@@ -8,18 +8,16 @@ const TEST_DATA_DIR = "./test_data";
 describe("testPlanGenerator", () => {
    const goodFeatureDir = TEST_DATA_DIR + "/features/first_feature_dir";
 
-   const version = "v201811141000";
+   const version = "0.40.00";
 
    const testCaseOne = {
       featureName: "My Feature A",
-      scenarioName: "My Scenario A",
       isRequired: true,
       requiredBy: "story-4567",
    };
 
    const testCaseTwo = {
       featureName: "My Feature B",
-      scenarioName: "My Scenario A",
       isRequired: false,
       requiredBy: "story-1234",
    };
@@ -31,20 +29,19 @@ describe("testPlanGenerator", () => {
          version
       );
       const lines = testPlanContent.split("\n");
-      expect(lines.length).toBe(20);
-      expect(lines[4]).toBe("First Feature,Basic Capsule Time,no,");
+      expect(lines.length).toBe(8);
+      expect(lines[3]).toBe("/first_feature_dir/First,no,");
    });
 
    it("generates test cases from a directory of feature files", async () => {
       const features = await loadFeaturesFrom(goodFeatureDir);
       const testCases = generateTestCases(features);
-      expect(testCases.length).toBe(16);
-      expect(testCases[1].featureName).toBe("First Feature");
-      expect(testCases[1].scenarioName).toBe("Basic Capsule Time");
-      expect(testCases[1].isRequired).toBe(false);
+      expect(testCases.length).toBe(4);
+      expect(testCases[0].featureName).toBe("/first_feature_dir/First");
+      expect(testCases[0].isRequired).toBe(false);
    });
 
-   it("exports a test cases to csv format", async () => {
+   it("exports test cases to csv format", async () => {
       const features = await loadFeaturesFrom(goodFeatureDir);
       const goodTestCases = generateTestCases(features);
       const filename = "./test_results/generateFromGoodFeatures.csv";
@@ -55,7 +52,18 @@ describe("testPlanGenerator", () => {
          testCases: goodTestCases,
       };
 
-      await exportTestPlan(testPlan);
+      const content = await exportTestPlan(testPlan);
+      const result = content.split("\n");
+      expect(result[0]).toBe("Version To Test");
+      expect(result[1]).toBe(version);
+      expect(result[2]).toBe("Feature,Required,Required By");
+      expect(result[3]).toBe("/first_feature_dir/First,no,");
+      expect(result[4]).toBe(
+         "/first_feature_dir/second_feature_dir/Fourth,no,"
+      );
+      expect(result[5]).toBe(
+         "/first_feature_dir/second_feature_dir/Second,no,"
+      );
    });
 
    it("exports a test plan to csv ", async () => {
@@ -67,8 +75,6 @@ describe("testPlanGenerator", () => {
 
       const exported = await exportTestPlan(testPlan);
       const lines: string[] = exported.split("\n");
-      expect(lines[3]).toContain(
-         `${testCaseOne.featureName},${testCaseOne.scenarioName}`
-      );
+      expect(lines[3]).toContain(`${testCaseOne.featureName}`);
    });
 });
