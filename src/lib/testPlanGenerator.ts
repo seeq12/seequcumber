@@ -25,7 +25,7 @@ export async function generateTemplate(
  */
 export function generateTestCases(features: Feature[]): TestCase[] {
    return features.map(feature => ({
-      featureName: feature.filename,
+     groupedFeatureName: feature.filename,
       isRequired: false,
       requiredBy: "",
    }));

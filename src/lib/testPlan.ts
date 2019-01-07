@@ -6,7 +6,7 @@ export interface Feature extends IFeature {
    filename: string;
 }
 export interface TestCase {
-   featureName: string;
+   groupedFeatureName: string;
    isRequired: boolean;
    requiredBy: string;
 }
@@ -28,9 +28,9 @@ export function findTestCase(
    testCase: TestCase,
    testCases: TestCase[]
 ): TestCase {
-   return testCases.find(item => item.featureName === testCase.featureName);
+   return testCases.find(item => item.groupedFeatureName === testCase.groupedFeatureName);
 }
 
 export function sortTestCasesByFeatureName(testCases: TestCase[]): TestCase[] {
-   return sortBy(testCases, ["featureName"]);
+   return sortBy(testCases, ["groupedFeatureName"]);
 }

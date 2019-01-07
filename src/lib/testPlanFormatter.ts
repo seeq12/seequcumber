@@ -22,7 +22,7 @@ function exportTestCases(testCases: TestCase[]): string {
          },
       },
       columns: [
-         { key: "featureName", header: "Feature" },
+         { key: "groupedFeatureName", header: "Feature" },
          { key: "isRequired", header: "Required" },
          { key: "requiredBy", header: "Required By" },
       ],

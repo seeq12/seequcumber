@@ -1,7 +1,7 @@
 Version To Test
- 0.40.00
+0.40.00
 Feature,Required,Required By
-/first_feature_dir/First Feature,yes,
-/first_feature_dir/second_feature_dir/Fourth Feature,no,
-/first_feature_dir/second_feature_dir/Second Feature,no,
-/first_feature_dir/second_feature_dir/Third Feature,no,
+/first/First,yes,
+/first/second/Fourth,no,
+/first/second/Second,no,
+/first/second/Third,yes,

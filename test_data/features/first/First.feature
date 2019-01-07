@@ -138,7 +138,8 @@ Feature: First Feature
     When I select several capsules in the Capsules Panel
       | PASS | 0.40.00-v201811141002 | Tester One |  |
     Then the unselected signals become dimmed in the chart
-      | FAIL | 0.40.00-v201811141002 | Test One |  |
+      | PASS | 0.40.00-v201811141002 | Tester One |  |
+      | FAIL | 0.40.00-v201811141001 | Test One   |  |
     When I click the 'Dimming' menu in the toolbar
       | PASS | 0.40.00-v201811141002 | Tester One |  |
     And I check the box 'Show only selected signals'
@@ -324,12 +325,12 @@ Feature: First Feature
 
   Scenario: Limiting the number of capsule series for performance
     When I add at 4 signals to the trend and zoom out so that there are 30 capsules in the capsules table
-      | PASS | 0.40.00-v201811141002 | Tester One |  |
+      | PASS | 0.39.00-v201811141002 | Tester One |  |
     Then I see a notice that the number of capsule time segments is being limited to maintain performance
-      | PASS | 0.40.00-v201811141002 | Tester One |  |
+      | PASS | 0.39.00-v201811141002 | Tester One |  |
     And performance is still decent, as measured by moving the mouse across the trend or selecting a capsule
-      | PASS | 0.40.00-v201811141002 | Tester One |  |
+      | PASS | 0.39.00-v201811141002 | Tester One |  |
     When I try some of the suggestions given by the warning to limit the number shown
-      | PASS | 0.40.00-v201811141002 | Tester One |  |
+      | PASS | 0.39.00-v201811141002 | Tester One |  |
     Then eventually the warning notice disappears
-      | PASS | 0.40.00-v201811141002 | Tester One |  |
+      | PASS | 0.39.00-v201811141002 | Tester One |  |

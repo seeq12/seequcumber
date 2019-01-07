@@ -1,0 +1,29 @@
+<hr>
+<h2>Todo</h2>
+    <% if (!!todo) { -%>
+        <%  Object.keys(todo).forEach(function(key) { -%>      
+            <div class="wrap-collabsible">
+                <% const thisFeature = todo[key].find(item => item.groupedFeatureName === key && !item.scenarioName); -%>    
+                <input id="<%= key %>Todo" class="toggle" type="checkbox">
+                <label for="<%= key %>Todo" class="lbl-toggle todo"><%= key %></label>
+                <div class="collapsible-content">
+                    <div class="content-inner">
+                        <table>
+                            <tr>
+                                <th>Scenario</th>
+                                <th>Required By</th>
+                            </tr>
+                            <% for (const feature of todo[key])  { -%>
+                                <% if (!!feature.scenarioName) { -%>
+                                    <tr>
+                                        <td><%= feature.scenarioName %></td>
+                                        <td><%= feature.requiredBy %></td>
+                                    </tr>
+                                <% } -%>
+                            <% } -%>             
+                        </table>
+                    </div>
+                </div>
+            </div>
+        <% }); -%>
+    <% } -%>
