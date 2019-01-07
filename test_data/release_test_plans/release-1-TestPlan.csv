@@ -1,19 +1,7 @@
 Version To Test
-0.40.00-v201811141000
-Feature,Scenario,Required,Required By
-First Feature,,yes,story-1-GoodTestPlan
-First Feature,Adjusting Conditions in the Details Panel,no,
-First Feature,Basic Capsule Time,yes,story-1-GoodTestPlan story-2-AnotherGoodTestPlan
-First Feature,Capsule Time Alignments,yes,story-1-GoodTestPlan
-First Feature,Capsule Time Dimmed - outside conditions,no,
-First Feature,Capsule Time Dimmed - unselected signals,no,
-First Feature,Capsule Time Dimming Menu and Alerts,no,
-First Feature,Capsule Time displays uncertain signal,no,
-First Feature,Capsule Time hidden Alignments,yes,story-1-GoodTestPlan
-First Feature,Limiting the number of capsule series for performance,no,
-Fourth Feature,,no,
-Fourth Feature,Searching for Name should not match journal entry/annotations,no,
-Second Feature,,no,
-Second Feature,Function documentation formatting,yes,story-2-AnotherGoodTestPlan
-Third Feature,,no,
-Third Feature,Edit journal entry in an Edit/Full Control workbook,yes,story-2-AnotherGoodTestPlan
+0.40.00
+Feature,Required,Required By
+/first/First,yes,Story-1-GoodTestPlan
+/first/second/Fourth,no,
+/first/second/Third,yes,Story-1-GoodTestPlan Story-2-AnotherGoodTestPlan
+/first/second/Second,no,

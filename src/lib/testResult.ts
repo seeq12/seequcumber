@@ -34,6 +34,7 @@ export interface TestReport {
 }
 
 export interface TestResult extends TestCase {
+   scenarioName: string;
    isCompleted: boolean;
    status: Status;
    defects: string;

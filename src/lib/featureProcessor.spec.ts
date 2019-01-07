@@ -7,7 +7,7 @@ import {
 describe("featureProcessor", () => {
    const goodFeatureFile = "./test_data/features/good.feature";
    const badFeatureDir = "./test_data/features/bad_features";
-   const goodFeatureDir = "./test_data/features/first_feature_dir";
+   const goodFeatureDir = "./test_data/features/first";
 
    it("parses a good feature file", async () => {
       const result = await parseFeatureFile(goodFeatureFile);
@@ -36,9 +36,7 @@ describe("featureProcessor", () => {
    });
 
    it("finds all feature files recursively", async () => {
-      const result = await findAllFeatureFiles(
-         "./test_data/features/first_feature_dir"
-      );
+      const result = await findAllFeatureFiles("./test_data/features/first");
       expect(result.length).toBe(5);
    });
 

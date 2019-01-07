@@ -7,23 +7,20 @@ import {
 const TEST_DATA_DIR = "./test_data";
 
 describe("releaseTestPlanGenerator", () => {
-   const versionToTest = "0.40.00-v201811141000";
+   const versionToTest = "0.40.00";
    const goodTestPlanDir = "./test_data/test_plans";
    const testCaseOne = {
-      featureName: "My Feature A",
-      scenarioName: "My Scenario A",
+      groupedFeatureName: "/dir/My Feature A",
       isRequired: true,
       requiredBy: "story-2",
    };
    const testCaseTwo = {
-      featureName: "My Feature B",
-      scenarioName: "My Scenario a",
+      groupedFeatureName: "/dir/My Feature A",
       isRequired: true,
       requiredBy: "story-2",
    };
    const testCaseThree = {
-      featureName: "My Feature A",
-      scenarioName: "My Scenario b",
+      groupedFeatureName: "/dir/My Feature A",
       isRequired: false,
       requiredBy: "story-2",
    };
@@ -36,19 +33,22 @@ describe("releaseTestPlanGenerator", () => {
       ]);
 
       expect(sortedTestCases.length).toBe(3);
-      expect(sortedTestCases[0].featureName).toBe(testCaseOne.featureName);
-      expect(sortedTestCases[0].scenarioName).toBe(testCaseOne.scenarioName);
+      expect(sortedTestCases[0].groupedFeatureName).toBe(
+         testCaseOne.groupedFeatureName
+      );
 
-      expect(sortedTestCases[1].featureName).toBe(testCaseThree.featureName);
-      expect(sortedTestCases[1].scenarioName).toBe(testCaseThree.scenarioName);
+      expect(sortedTestCases[1].groupedFeatureName).toBe(
+         testCaseThree.groupedFeatureName
+      );
 
-      expect(sortedTestCases[2].featureName).toBe(testCaseTwo.featureName);
-      expect(sortedTestCases[2].scenarioName).toBe(testCaseTwo.scenarioName);
+      expect(sortedTestCases[2].groupedFeatureName).toBe(
+         testCaseTwo.groupedFeatureName
+      );
    });
 
    it("generates test plans from directory of test plans", async () => {
       const testPlan = await generateReleaseTestPlan(
-         "./test_results/releaseTestPlan.csv",
+         "./test_results/ReleaseTestPlan.csv",
          versionToTest,
          goodTestPlanDir
       );
@@ -56,19 +56,17 @@ describe("releaseTestPlanGenerator", () => {
       const results = testPlan.split("\n");
       expect(results[0]).toBe("Version To Test");
       expect(results[1]).toBe(versionToTest);
-      expect(results[2]).toBe("Feature,Scenario,Required,Required By");
-      expect(results[5]).toContain("First Feature");
-      expect(results[5]).toContain("Basic Capsule Time");
-      expect(results[5]).toContain("story-1-GoodTestPlan");
-      expect(results[16]).toContain("Second Feature");
-      expect(results[16]).toContain("Function documentation");
-      expect(results[16]).toContain("story-2-AnotherGoodTestPlan");
+      expect(results[2]).toBe("Feature,Required,Required By");
+      expect(results[3]).toContain("First");
+      expect(results[3]).toContain("Story-1-GoodTestPlan");
+      expect(results[6]).toContain("Third");
+      expect(results[6]).toContain("Story-2-AnotherGoodTestPlan");
    });
 
    it("throws error on invalid test plan", async () => {
       try {
          await loadTestPlanFromFile(
-            TEST_DATA_DIR + "/bad_test_plan/emptyTestPlan.csv"
+            TEST_DATA_DIR + "/bad_test_plan/EmptyTestPlan.csv"
          );
       } catch (error) {
          expect(error.toString()).toContain("Cannot find test plan:");
@@ -78,7 +76,7 @@ describe("releaseTestPlanGenerator", () => {
    it("throws error on invalid version to test", async () => {
       try {
          await loadTestPlanFromFile(
-            TEST_DATA_DIR + "/bad_test_plan/emptyVersionToTest.csv"
+            TEST_DATA_DIR + "/bad_test_plan/EmptyVersionToTest.csv"
          );
       } catch (error) {
          expect(error.toString()).toContain("Cannot find test plan:");

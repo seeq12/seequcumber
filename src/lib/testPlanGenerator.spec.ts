@@ -6,12 +6,13 @@ import { TestPlan } from "./testPlan";
 const TEST_DATA_DIR = "./test_data";
 
 describe("testPlanGenerator", () => {
-   const goodFeatureDir = TEST_DATA_DIR + "/features/first_feature_dir";
+   const goodFeatureDir = TEST_DATA_DIR + "/features/first";
 
    const version = "v201811141000";
 
    const testCaseOne = {
       featureName: "My Feature A",
+      groupedFeatureName: "/dir/My Feature A",
       scenarioName: "My Scenario A",
       isRequired: true,
       requiredBy: "story-4567",
@@ -19,6 +20,7 @@ describe("testPlanGenerator", () => {
 
    const testCaseTwo = {
       featureName: "My Feature B",
+      groupedFeatureName: "/dir/My Feature A",
       scenarioName: "My Scenario A",
       isRequired: false,
       requiredBy: "story-1234",
@@ -31,17 +33,16 @@ describe("testPlanGenerator", () => {
          version
       );
       const lines = testPlanContent.split("\n");
-      expect(lines.length).toBe(20);
-      expect(lines[4]).toBe("First Feature,Basic Capsule Time,no,");
+      expect(lines.length).toBe(8);
+      expect(lines[3]).toBe("/first/First,no,");
    });
 
    it("generates test cases from a directory of feature files", async () => {
       const features = await loadFeaturesFrom(goodFeatureDir);
       const testCases = generateTestCases(features);
-      expect(testCases.length).toBe(16);
-      expect(testCases[1].featureName).toBe("First Feature");
-      expect(testCases[1].scenarioName).toBe("Basic Capsule Time");
-      expect(testCases[1].isRequired).toBe(false);
+      expect(testCases.length).toBe(4);
+      expect(testCases[0].groupedFeatureName).toBe("/first/First");
+      expect(testCases[0].isRequired).toBe(false);
    });
 
    it("exports a test cases to csv format", async () => {
@@ -67,8 +68,6 @@ describe("testPlanGenerator", () => {
 
       const exported = await exportTestPlan(testPlan);
       const lines: string[] = exported.split("\n");
-      expect(lines[3]).toContain(
-         `${testCaseOne.featureName},${testCaseOne.scenarioName}`
-      );
+      expect(lines[3]).toContain(testCaseOne.featureName);
    });
 });

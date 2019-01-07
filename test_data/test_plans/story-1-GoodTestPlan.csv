@@ -1,19 +1,7 @@
 Version To Test
-v201811141000
-Feature,Scenario,Required,Required By
-First Feature,,yes,
-First Feature,Basic Capsule Time,yes,
-First Feature,Capsule Time Alignments,yes,
-First Feature,Capsule Time hidden Alignments,yes,
-First Feature,Capsule Time Dimmed - outside conditions,no,
-First Feature,Capsule Time Dimmed - unselected signals,no,
-First Feature,Capsule Time Dimming Menu and Alerts,no,
-First Feature,Capsule Time displays uncertain signal,no,
-First Feature,Adjusting Conditions in the Details Panel,no,
-First Feature,Limiting the number of capsule series for performance,no,
-Fourth Feature,,no,
-Fourth Feature,Searching for Name should not match journal entry/annotations,no,
-Second Feature,,no,
-Second Feature,Function documentation formatting,no,
-Third Feature,,no,
-Third Feature,Edit journal entry in an Edit/Full Control workbook,no,
+0.40.00
+Feature,Required,Required By
+/first/First,yes,
+/first/second/Fourth,no,
+/first/second/Second,no,
+/first/second/Third,yes,

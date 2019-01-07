@@ -68,8 +68,7 @@ export function mergeTestCase(
       var newRequiredBy = testCase.isRequired ? requiredByTestPlanName : "";
 
       mergedTestCases.push({
-         featureName: testCase.featureName,
-         scenarioName: testCase.scenarioName,
+         groupedFeatureName: testCase.groupedFeatureName,
          isRequired: testCase.isRequired,
          requiredBy: newRequiredBy,
       });
@@ -156,7 +155,7 @@ export async function loadTestCases(data: string): Promise<TestCase[]> {
          }
          return value;
       },
-      columns: ["featureName", "scenarioName", "isRequired", "requiredBy"],
+      columns: ["groupedFeatureName", "isRequired", "requiredBy"],
       // The first 3 are not test cases (versionToTest header, versionToTest value, column headers),
       from_line: 4,
       skip_empty_lines: true,
@@ -164,6 +163,6 @@ export async function loadTestCases(data: string): Promise<TestCase[]> {
    };
 
    const testPlanScenarios: TestCase[] = parse(data, options);
-   const valid = testPlanScenarios.filter(item => !!item.featureName);
+   const valid = testPlanScenarios.filter(item => !!item.groupedFeatureName);
    return sortTestCases(valid);
 }
