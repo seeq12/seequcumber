@@ -34,11 +34,11 @@ export async function exportToHtml(
 ): Promise<string> {
    const completed = groupBy(
       testReport.testResults.filter(
-         run =>
+         result =>
             // The html template requires the presence of the parent feature (with no scenario name)
             // whenever a scenario is completed
-            (run.scenarioName === "" && run.isRequired) ||
-            (!!run.scenarioName && run.isRequired && run.isCompleted)
+            (result.scenarioName === "" && result.isRequired) ||
+            (!!result.scenarioName && result.isRequired && result.isCompleted)
       ),
       "groupedFeatureName"
    );
@@ -46,13 +46,14 @@ export async function exportToHtml(
    const todo = groupBy(
       testReport.testResults.filter(
          // only include feature that contain required scenarios
-         run => !!run.scenarioName && run.isRequired && !run.isCompleted
+         result =>
+            !!result.scenarioName && result.isRequired && !result.isCompleted
       ),
       "groupedFeatureName"
    );
 
    const notRequired = groupBy(
-      testReport.testResults.filter(run => !run.isRequired),
+      testReport.testResults.filter(result => !result.isRequired),
       "groupedFeatureName"
    );
 

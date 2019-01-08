@@ -124,7 +124,7 @@ function getStepResults(scenario: IScenario): StepResults[] {
 function getLatestStepResult(step: IStep): StepResults {
    const rows = step.dataTable.rows;
 
-   // Keep only the latest test run
+   // Keep only the latest test result
    const reducer = (latest: string, row: ITableRow): string => {
       const stepVersion = !!row.cells
          ? row.cells[1].value.toString().trim()
@@ -133,7 +133,7 @@ function getLatestStepResult(step: IStep): StepResults {
    };
    const latestVersion = rows.reduce(reducer, "");
 
-   // Find test results for the latest test run
+   // Find test results for the latest test result
    const result = rows.find(row => {
       return row.cells[1].value.includes(latestVersion);
    });
@@ -189,13 +189,13 @@ function evaluateTestResults(
    const results: TestResult[] = [];
 
    for (const testCase of testCases) {
-      const featureRun = featureResults.find(
-         feature => feature.name === testCase.groupedFeatureName
+      const featureResult = featureResults.find(feature =>
+         testCase.groupedFeatureName.includes(feature.name)
       );
-      results.push(getResultForFeature(versionToTest, testCase, featureRun));
+      results.push(getResultForFeature(versionToTest, testCase, featureResult));
 
-      if (!!featureRun) {
-         for (const scenario of featureRun.scenarios) {
+      if (!!featureResult) {
+         for (const scenario of featureResult.scenarios) {
             results.push(
                getResultForScenario(versionToTest, testCase, scenario)
             );

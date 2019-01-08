@@ -125,15 +125,14 @@ export async function loadTestPlanFromFile(
 export function loadVersionToTest(data: string) {
    const options = {
       header: true,
-      columns: ["versionToTest"],
-      from_line: 1,
+      fromLine: 1,
       to_line: 2,
       skip_empty_lines: true,
       record_delimiter: RECORD_DELIMITER,
    };
    const versionFields = parse(data, options);
 
-   return !!versionFields[1] && versionFields[1].versionToTest.trim();
+   return !!versionFields[1] && versionFields[1][0].trim();
 }
 
 export async function loadTestCases(data: string): Promise<TestCase[]> {
