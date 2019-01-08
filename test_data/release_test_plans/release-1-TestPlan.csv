@@ -1,7 +1,7 @@
 Version To Test
 0.40.00
 Feature,Required,Required By
-/first/First,yes,Story-1-GoodTestPlan
+/first/First,yes,Story-1
 /first/second/Fourth,no,
-/first/second/Third,yes,Story-1-GoodTestPlan Story-2-AnotherGoodTestPlan
+/first/second/Third,yes,Story-1 Story-2
 /first/second/Second,no,

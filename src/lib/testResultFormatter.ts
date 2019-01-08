@@ -1,8 +1,8 @@
+import ejs from "ejs";
 import fs from "fs";
 import { groupBy } from "lodash";
 import { TestReport } from "./testResult";
 import { writeContentToFile } from "./fileUtilities";
-import ejs from "ejs";
 
 export enum Format {
    HTML,
@@ -21,6 +21,13 @@ export async function exportTo(
    }
 }
 
+/**
+ * Oragnize test result and create html file
+ * @param testReport
+ * @param filename
+ * @returns HTML content
+ */
+
 export async function exportToHtml(
    testReport: TestReport,
    filename: string
@@ -28,6 +35,8 @@ export async function exportToHtml(
    const completed = groupBy(
       testReport.testResults.filter(
          run =>
+            // The html template requires the presence of the parent feature (with no scenario name)
+            // whenever a scenario is completed
             (run.scenarioName === "" && run.isRequired) ||
             (!!run.scenarioName && run.isRequired && run.isCompleted)
       ),
@@ -36,6 +45,7 @@ export async function exportToHtml(
 
    const todo = groupBy(
       testReport.testResults.filter(
+         // only include feature that contain required scenarios
          run => !!run.scenarioName && run.isRequired && !run.isCompleted
       ),
       "groupedFeatureName"
@@ -57,7 +67,6 @@ export async function exportToHtml(
    const options = { filename: "./src/lib/ejs/index.ejs" };
 
    const html = ejs.render(template, data, options);
-
    await writeContentToFile(filename, html);
    return html;
 }

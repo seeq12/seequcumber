@@ -8,7 +8,6 @@ import path from "path";
 
 /**
  * Recursively traverses a directory to tranform all feature files into a sorted list of Gherkin Features
- *      sorted by the feature.name
  * @param directory Root directories to search recursively
  * @returns         List of Gherkin Features
  */

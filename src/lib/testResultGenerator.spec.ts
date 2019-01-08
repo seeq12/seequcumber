@@ -1,8 +1,8 @@
-import { generateTestReport } from "./testRunGenerator";
+import { generateTestReport } from "./testResultGenerator";
 import { TestResult, Status } from "./testResult";
 import { some } from "lodash";
 import { loadTestCases } from "./releaseTestPlanGenerator";
-import { Format } from "./testRunFormatter";
+import { Format } from "./testResultFormatter";
 
 describe("testRunGenerator", () => {
    const goodFeatureDir = "./test_data/features/first";
@@ -10,7 +10,7 @@ describe("testRunGenerator", () => {
    const failed: TestResult = {
       groupedFeatureName: "/first/First",
       scenarioName: "Basic Capsule Time",
-      requiredBy: "Story-1-GoodTestPlan",
+      requiredBy: "Story-1",
       isRequired: true,
       isCompleted: true,
       defects: "defect-1",
@@ -20,7 +20,7 @@ describe("testRunGenerator", () => {
    const passed: TestResult = {
       groupedFeatureName: "/first/First",
       scenarioName: "Adjusting Conditions in the Details Panel",
-      requiredBy: "Story-1-GoodTestPlan",
+      requiredBy: "Story-1",
       isRequired: true,
       isCompleted: true,
       defects: "",
@@ -30,7 +30,7 @@ describe("testRunGenerator", () => {
    const todo: TestResult = {
       groupedFeatureName: "/first/First",
       scenarioName: "Limiting the number of capsule series for performance",
-      requiredBy: "Story-1-GoodTestPlan",
+      requiredBy: "Story-1",
       isRequired: true,
       isCompleted: false,
       defects: "",
@@ -40,7 +40,7 @@ describe("testRunGenerator", () => {
    const skipped: TestResult = {
       groupedFeatureName: "/first/First",
       scenarioName: "Capsule Time Alignments",
-      requiredBy: "Story-1-GoodTestPlan",
+      requiredBy: "Story-1",
       isRequired: true,
       isCompleted: true,
       defects: "",
@@ -55,7 +55,7 @@ describe("testRunGenerator", () => {
       isRequired: false,
       isCompleted: false,
       defects: "",
-      status: Status.PASS,
+      status: Status.UNDEFINED,
    };
 
    it("derives status", () => {

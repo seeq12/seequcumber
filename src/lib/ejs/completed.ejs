@@ -8,38 +8,41 @@
   
     <% if (!!completed) { %>
         <%  Object.keys(completed).forEach(function(key) { -%>  
-            <div class="wrap-collabsible">
                 <% const thisFeature = completed[key].find(item => item.groupedFeatureName === key && !item.scenarioName); -%>
-                <input id="<%= key %>Completed" class="toggle" type="checkbox">
-                <label for="<%= key %>Completed" class="lbl-toggle 
-                    <%  if (thisFeature.status === "PASS") { -%>
-                    pass
-                    <%  } else if (thisFeature.status === "FAIL") { -%>
-                    fail
-                    <%  } else {} -%>
-                    ">
-                    <%= key %></label>
-                <div class="collapsible-content">
-                    <div class="content-inner">
-                    <table>
-                         <tr>
-                                <th>Scenario</th>
-                                <th>Required By</th>
-                                <th>Defect</th>
-                        </tr>
-                        <% for (const testCase of completed[key])  { -%>
-                            <% if (!!testCase.scenarioName) { -%>
-                                <% const thisStatus = testCase.status.toLowerCase(); -%>
+                <% const hasScenarios = completed[key].some(item => item.groupedFeatureName === key && item.scenarioName); -%>
+                <% if (hasScenarios) { -%>
+                    <div class="wrap-collabsible">
+                        <input id="<%= key %>Completed" class="toggle" type="checkbox">
+                        <label for="<%= key %>Completed" class="lbl-toggle 
+                            <%  if (thisFeature.status === "PASS") { -%>
+                            pass
+                            <%  } else if (thisFeature.status === "FAIL") { -%>
+                            fail
+                            <%  } -%>
+                            ">
+                            <%= key %></label>
+                            <div class="collapsible-content">
+                            <div class="content-inner">
+                            <table>
                                 <tr>
-                                    <td class="<%= thisStatus %>"><%= testCase.scenarioName %></td>
-                                    <td class="<%= thisStatus %>"><%= testCase.requiredBy %></td>
-                                    <td class="<%= thisStatus %>"><%= testCase.defects %></td>
+                                        <th>Scenario</th>
+                                        <th>Required By</th>
+                                        <th>Defect</th>
                                 </tr>
-                            <% } -%>
-                        <% } -%>             
-                    </table>
+                                <% for (const testCase of completed[key])  { -%>
+                                    <% if (!!testCase.scenarioName) { -%>
+                                        <% const thisStatus = testCase.status.toLowerCase(); -%>
+                                        <tr>
+                                            <td class="<%= thisStatus %>"><%= testCase.scenarioName %></td>
+                                            <td class="<%= thisStatus %>"><%= testCase.requiredBy %></td>
+                                            <td class="<%= thisStatus %>"><%= testCase.defects %></td>
+                                        </tr>
+                                    <% } -%>
+                                <% } -%>             
+                            </table>
+                        </div>
                     </div>
-                </div>
+                <% } -%>
             </div>
         <% }); -%>
     <% } -%>

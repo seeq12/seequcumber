@@ -63,7 +63,7 @@ export function mergeTestCase(
    requiredByTestPlanName: string,
    mergedTestCases: TestCase[]
 ): void {
-   // Test case does not exists
+   // Test case does not exists, add it
    if (!testCaseExists(testCase, mergedTestCases)) {
       var newRequiredBy = testCase.isRequired ? requiredByTestPlanName : "";
 
@@ -74,26 +74,18 @@ export function mergeTestCase(
       });
    } else {
       // Test case exists, requires merging
-      const existingTestCaseIndex = findIndexForTestCase(
-         testCase,
-         mergedTestCases
-      );
+      const index = findIndexForTestCase(testCase, mergedTestCases);
 
       if (testCase.isRequired) {
-         mergedTestCases[existingTestCaseIndex].isRequired = true;
-
-         if (mergedTestCases[existingTestCaseIndex].isRequired) {
+         if (mergedTestCases[index].isRequired) {
             // Existing test case was required by another test plan, augment requiredBy with this one
-            mergedTestCases[existingTestCaseIndex].requiredBy =
-               mergedTestCases[existingTestCaseIndex].requiredBy +
-               " " +
-               requiredByTestPlanName;
+            mergedTestCases[index].requiredBy =
+               mergedTestCases[index].requiredBy + " " + requiredByTestPlanName;
          } else {
             // Existing test case was not previously required, add only this requireBy
-            mergedTestCases[
-               existingTestCaseIndex
-            ].requiredBy = requiredByTestPlanName;
+            mergedTestCases[index].requiredBy = requiredByTestPlanName;
          }
+         mergedTestCases[index].isRequired = true;
       }
    }
 }
@@ -103,7 +95,7 @@ function findTestPlanFiles(directory: string): Promise<string[]> {
 }
 
 /**
- * Load the content of a Test Plan that was previously saved to cvs file
+ * Load the content of the test plan to gather test cases
  * @param filename
  */
 export async function loadTestPlanFromFile(

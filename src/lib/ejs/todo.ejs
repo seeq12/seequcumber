@@ -3,9 +3,8 @@
     <% if (!!todo) { -%>
         <%  Object.keys(todo).forEach(function(key) { -%>      
             <div class="wrap-collabsible">
-                <% const thisFeature = todo[key].find(item => item.groupedFeatureName === key && !item.scenarioName); -%>    
                 <input id="<%= key %>Todo" class="toggle" type="checkbox">
-                <label for="<%= key %>Todo" class="lbl-toggle todo"><%= key %></label>
+                <label for="<%= key %>Todo" class="lbl-toggle"><%= key %></label>
                 <div class="collapsible-content">
                     <div class="content-inner">
                         <table>

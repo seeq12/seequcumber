@@ -6,6 +6,8 @@ export interface Feature extends IFeature {
    filename: string;
 }
 export interface TestCase {
+   // Grouped feature include subdirectory names
+   // to group related features according to their domain
    groupedFeatureName: string;
    isRequired: boolean;
    requiredBy: string;
@@ -34,5 +36,5 @@ export function findIndexForTestCase(
 }
 
 export function sortTestCases(testCases: TestCase[]): TestCase[] {
-   return sortBy(testCases, ["featureName"]);
+   return sortBy(testCases, ["groupedFeatureName"]);
 }

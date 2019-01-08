@@ -3,7 +3,7 @@ import { loadFeaturesFrom } from "./featureProcessor";
 import { TestCase, Feature } from "./testPlan";
 
 /**
- * Traverse a feature file directory, collect test cases (scenarios)
+ * Traverse a feature file directory, collect test cases
  * and write test plan template to csv file
  * @param features
  */
@@ -22,18 +22,15 @@ export async function generateTemplate(
 }
 
 /**
- * Generate a list of unique Test Cases  from a list of Features
+ * Generate a list of unique Test Cases from a list of Features
  * @param features
  */
 export function generateTestCases(features: Feature[]): TestCase[] {
-   const testCases: TestCase[] = [];
-
-   features.map(feature => {
-      testCases.push({
+   return features.map(feature => {
+      return {
          groupedFeatureName: feature.filename,
          isRequired: false,
          requiredBy: "",
-      });
+      };
    });
-   return testCases;
 }

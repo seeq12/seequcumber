@@ -1,7 +1,7 @@
-import { exportTo, Format } from "./testRunFormatter";
+import { exportTo, Format } from "./testResultFormatter";
 import { Status, TestReport, TestResult } from "./testResult";
 
-describe("testRunFormatter", () => {
+describe("testResultFormatter", () => {
    const version = "v201811141000";
 
    const results: TestResult[] = [
