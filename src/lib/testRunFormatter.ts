@@ -14,10 +14,7 @@ export async function exportTo(
    filename: string
 ): Promise<string> {
    switch (format) {
-      case Format.HTML: {
-         return exportToHtml(testReport, filename);
-      }
-
+      case Format.HTML:
       default: {
          return exportToHtml(testReport, filename);
       }
@@ -29,12 +26,18 @@ export async function exportToHtml(
    filename: string
 ): Promise<string> {
    const completed = groupBy(
-      testReport.testResults.filter(run => run.isRequired && run.isCompleted),
+      testReport.testResults.filter(
+         run =>
+            (run.scenarioName === "" && run.isRequired) ||
+            (!!run.scenarioName && run.isRequired && run.isCompleted)
+      ),
       "groupedFeatureName"
    );
 
    const todo = groupBy(
-      testReport.testResults.filter(run => run.isRequired && !run.isCompleted),
+      testReport.testResults.filter(
+         run => !!run.scenarioName && run.isRequired && !run.isCompleted
+      ),
       "groupedFeatureName"
    );
 
