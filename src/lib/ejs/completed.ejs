@@ -10,14 +10,13 @@
         <%  Object.keys(completed).forEach(function(key) { -%>  
             <div class="wrap-collabsible">
                 <% const thisFeature = completed[key].find(item => item.groupedFeatureName === key && !item.scenarioName); -%>
-                            test  <% if (!thisFeature) { %>  <%= key %> <% } %>
                 <input id="<%= key %>Completed" class="toggle" type="checkbox">
                 <label for="<%= key %>Completed" class="lbl-toggle 
                     <%  if (thisFeature.status === "PASS") { -%>
                     pass
                     <%  } else if (thisFeature.status === "FAIL") { -%>
                     fail
-                    <%  } -%>
+                    <%  } else {} -%>
                     ">
                     <%= key %></label>
                 <div class="collapsible-content">
