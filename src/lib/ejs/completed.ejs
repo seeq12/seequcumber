@@ -13,11 +13,11 @@
                             test  <% if (!thisFeature) { %>  <%= key %> <% } %>
                 <input id="<%= key %>Completed" class="toggle" type="checkbox">
                 <label for="<%= key %>Completed" class="lbl-toggle 
-                    <%  //if (thisFeature.status === "PASS") { -%>
+                    <%  if (thisFeature.status === "PASS") { -%>
                     pass
-                    <%  //} else if (thisFeature.status === "FAIL") { -%>
+                    <%  } else if (thisFeature.status === "FAIL") { -%>
                     fail
-                    <%  //} -%>
+                    <%  } -%>
                     ">
                     <%= key %></label>
                 <div class="collapsible-content">

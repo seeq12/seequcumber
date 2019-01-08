@@ -29,12 +29,12 @@ describe("testRunGenerator", () => {
 
    const todo: TestResult = {
       groupedFeatureName: "/first/First",
-      scenarioName: "Adjusting Conditions in the Details Panel",
+      scenarioName: "Limiting the number of capsule series for performance",
       requiredBy: "Story-1-GoodTestPlan",
       isRequired: true,
       isCompleted: false,
       defects: "",
-      status: Status.UNDEFINED,
+      status: Status.PASS,
    };
 
    const skipped: TestResult = {
@@ -48,13 +48,14 @@ describe("testRunGenerator", () => {
    };
 
    const notRequired: TestResult = {
-      groupedFeatureName: "/first/First",
-      scenarioName: "Adjusting Conditions in the Details Panel",
-      requiredBy: "Story-1-GoodTestPlan",
+      groupedFeatureName: "/first/second/Fourth",
+      scenarioName:
+         "Searching for Name should not match journal entry/annotations",
+      requiredBy: "",
       isRequired: false,
       isCompleted: false,
       defects: "",
-      status: Status.SKIP,
+      status: Status.PASS,
    };
 
    it("derives status", () => {
@@ -84,13 +85,14 @@ describe("testRunGenerator", () => {
       const report = await generateTestReport(
          goodFeatureDir,
          "./test_data/release_test_plans/Release-1-TestPlan.csv",
-         "./test_results/testReportFormatted.html",
+         "./test_results/testReportByGenerator.html",
          Format.HTML
       );
       expect(report.versionToTest).toBe("0.40.00");
       expect(some(report.testResults, failed)).toBe(true);
       expect(some(report.testResults, passed)).toBe(true);
       expect(some(report.testResults, todo)).toBe(true);
+      expect(some(report.testResults, skipped)).toBe(true);
       expect(some(report.testResults, notRequired)).toBe(true);
    });
 });
