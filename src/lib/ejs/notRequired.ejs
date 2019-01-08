@@ -2,23 +2,20 @@
 <h2>Not Required</h2> 
     <% if (!!notRequired) { -%>
     <%  Object.keys(notRequired).forEach(function(key) { -%>      
-            <div class="wrap-collabsible">
+        <div class="wrap-collabsible">
             <input id="<%= key %>NotRequired" class="toggle" type="checkbox">
             <label for="<%= key %>NotRequired" class="lbl-toggle"><%= key %></label>
             <div class="collapsible-content">
                 <div class="content-inner">
                     <table>
-                        <tr>
-                            <th>Scenario</th>
-                        </tr>
                         <% for (const feature of notRequired[key])  { -%>
                         <tr>
                             <td><%= feature.scenarioName %></td>
                             </tr>
                         <% } -%>
                     </table>
+                </div>
             </div>
-            </div>
-            </div> 
+        </div> 
     <% }); -%>
 <% } -%>
