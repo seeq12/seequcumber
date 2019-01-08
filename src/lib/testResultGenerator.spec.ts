@@ -4,7 +4,7 @@ import { some } from "lodash";
 import { loadTestCases } from "./releaseTestPlanGenerator";
 import { Format } from "./testResultFormatter";
 
-describe("testRunGenerator", () => {
+describe("testResultGenerator", () => {
    const goodFeatureDir = "./test_data/features/first";
 
    const failed: TestResult = {
