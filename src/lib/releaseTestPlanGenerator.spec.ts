@@ -1,4 +1,4 @@
-import { sortTestCases, TestCase } from "./testPlan";
+import { sortTestCasesByFeatureName, TestCase } from "./testPlan";
 import {
    generateReleaseTestPlan,
    loadTestPlanFromFile,
@@ -26,18 +26,18 @@ describe("releaseTestPlanGenerator", () => {
    };
 
    it("sorts test cases", () => {
-      const sortedTestCases: TestCase[] = sortTestCases([
+      const sortedTestCases: TestCase[] = sortTestCasesByFeatureName([
          testCaseThree,
          testCaseTwo,
          testCaseOne,
       ]);
 
       expect(sortedTestCases.length).toBe(3);
-      expect(sortedTestCases[0].featureName).toBe(testCaseOne.featureName);
-
-      expect(sortedTestCases[1].featureName).toBe(testCaseThree.featureName);
-
-      expect(sortedTestCases[2].featureName).toBe(testCaseTwo.featureName);
+      expect(sortedTestCases.map(feature => feature.featureName)).toEqual([
+         testCaseOne.featureName,
+         testCaseThree.featureName,
+         testCaseTwo.featureName,
+      ]);
    });
 
    it("generates test plans from directory of test plans", async () => {
@@ -59,22 +59,26 @@ describe("releaseTestPlanGenerator", () => {
    });
 
    it("throws error on invalid test plan", async () => {
+      let errorMessage;
       try {
          await loadTestPlanFromFile(
             TEST_DATA_DIR + "/bad_test_plan/emptyTestPlan.csv"
          );
       } catch (error) {
-         expect(error.toString()).toContain("Cannot find test plan:");
+         errorMessage = error.toString();
       }
+      expect(errorMessage).toContain("Cannot read test plan");
    });
 
    it("throws error on invalid version to test", async () => {
+      let errorMessage;
       try {
          await loadTestPlanFromFile(
-            TEST_DATA_DIR + "/bad_test_plan/emptyVersionToTest.csv"
+            TEST_DATA_DIR + "/bad_test_plan/EmptyVersionToTest.csv"
          );
       } catch (error) {
-         expect(error.toString()).toContain("Cannot find test plan:");
+         errorMessage = error.toString();
       }
+      expect(errorMessage).toContain("Cannot read Version to Test");
    });
 });

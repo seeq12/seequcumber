@@ -4,7 +4,6 @@ import { writeContentToFile } from "./fileUtilities";
 
 /**
  * Export test plan to csv file
- * @param testPlan
  * @returns the content of the csv file
  */
 export async function exportTestPlan(testPlan: TestPlan): Promise<string> {
@@ -19,11 +18,7 @@ function exportTestCases(testCases: TestCase[]): string {
    const options = {
       cast: {
          boolean(value: boolean): string {
-            if (value) {
-               return "yes";
-            } else {
-               return "no";
-            }
+            return value ? "yes" : "no";
          },
       },
       columns: [

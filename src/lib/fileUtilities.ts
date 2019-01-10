@@ -5,9 +5,9 @@ import path from "path";
 import { promisify } from "util";
 
 const globAsync = promisify(glob);
-const asyncReadFile = promisify(fs.readFile);
-const asyncWriteFile = promisify(fs.writeFile);
-const mkdirpAsyn = promisify(mkdirp);
+const readFileAsync = promisify(fs.readFile);
+const writeFileAsync = promisify(fs.writeFile);
+const mkdirpAsync = promisify(mkdirp);
 
 /**
  * Recursively find all files using a pattern in a root folder
@@ -20,7 +20,7 @@ export async function findAllFilesForPattern(
    pattern: string
 ): Promise<string[]> {
    const fileFindingExpression = directory + pattern;
-   return await globAsync(fileFindingExpression);
+   return globAsync(fileFindingExpression);
 }
 
 export async function writeContentToFile(
@@ -28,13 +28,18 @@ export async function writeContentToFile(
    data: string
 ): Promise<void> {
    const dir = path.dirname(filename);
-   await mkdirpAsyn(dir);
-   await asyncWriteFile(filename, data);
+   await mkdirpAsync(dir);
+   writeFileAsync(filename, data);
 }
 
 export async function readContentFromFile(filename: string): Promise<string> {
-   const buffer = await asyncReadFile(filename);
-   return buffer.toString();
+   const buffer = await readFileAsync(filename);
+   const data = buffer.toString();
+
+   if (!data) {
+      throw new Error(`Cannot read test plan: ${filename}`);
+   }
+   return data;
 }
 
 export function getFilename(name: string) {

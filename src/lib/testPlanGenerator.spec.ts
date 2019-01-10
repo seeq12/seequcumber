@@ -75,6 +75,7 @@ describe("testPlanGenerator", () => {
 
       const exported = await exportTestPlan(testPlan);
       const lines: string[] = exported.split("\n");
+      expect(lines.length).toBe(6);
       expect(lines[3]).toContain(`${testCaseOne.featureName}`);
    });
 });

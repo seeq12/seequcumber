@@ -39,7 +39,7 @@ export async function loadFeaturesFrom(
       throw new Error(`Feature file is empty: in ${rootDirectory}`);
    }
 
-   const validFeatures: Feature[] = messages
+   const validFeatures = messages
       .map(message => message.gherkinDocument)
       // keep only valid features
       .filter(document => !!document && !!document.feature)
@@ -47,14 +47,14 @@ export async function loadFeaturesFrom(
          return {
             ...document.feature,
             // Used to group features by their directory location
-            filename: formatFeatureName(document.uri),
-         };
+            filename: formatFeatureFilename(document.uri),
+         } as Feature;
       });
 
    return sortBy(validFeatures, "filename");
 }
 
-function formatFeatureName(name: string): string {
+function formatFeatureFilename(name: string): string {
    return name
       .replace(".feature", "")
       .replace("features", "")
@@ -68,8 +68,7 @@ function formatFeatureName(name: string): string {
 
 /**
  * Parse a feature file into a list of cucumber message wrappers
- * @param featureFiles    List of feature files
- * @returns               List of cucumber message wrappers
+ *
  */
 export async function parseFeatureFile(
    featureFiles: string
@@ -103,8 +102,6 @@ export async function parseFeatureFile(
 
 /**
  * Recursively find all features in a root folder
- * @param directory Root folder
- * @returns Arrays of feature files
  */
 export function findAllFeatureFiles(directory: string): Promise<string[]> {
    return findAllFilesForPattern(directory, "/**/*.feature");

@@ -33,6 +33,6 @@ export function findIndexForTestCase(
    );
 }
 
-export function sortTestCases(testCases: TestCase[]): TestCase[] {
+export function sortTestCasesByFeatureName(testCases: TestCase[]): TestCase[] {
    return sortBy(testCases, ["featureName"]);
 }
