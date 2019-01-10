@@ -7,7 +7,7 @@ describe("fileUtilities", () => {
    it("find features files with pattern", async () => {
       const files = await findAllFilesForPattern(
          goodFeatureDir,
-         "/**/*.feature"
+         "**/*.feature"
       );
       expect(files.length).toBe(5);
    });
@@ -15,7 +15,7 @@ describe("fileUtilities", () => {
    it("finds test plans with pattern", async () => {
       const files = await findAllFilesForPattern(
          goodTestPlanDir,
-         "/**/*TestPlan*.csv"
+         "**/*TestPlan*.csv"
       );
       expect(files.length).toBe(2);
    });

@@ -9,7 +9,7 @@ import {
    TestCase,
    TestPlan,
    testCaseExists,
-   findIndexForTestCase,
+   findTestCase,
    sortTestCasesByFeatureName,
 } from "./testPlan";
 
@@ -79,11 +79,7 @@ export function mergeTestCase(
       });
    } else {
       // Test case exists, requires merging
-      const existingTestCaseIndex = findIndexForTestCase(
-         testCase,
-         mergedTestCases
-      );
-      const existingTestCase = mergedTestCases[existingTestCaseIndex];
+      const existingTestCase = findTestCase(testCase, mergedTestCases);
 
       if (testCase.isRequired) {
          if (existingTestCase.isRequired) {
@@ -171,5 +167,5 @@ async function loadTestCases(data: string): Promise<TestCase[]> {
  * @returns List of Test Plan filenames
  */
 function findTestPlanFiles(directory: string): Promise<string[]> {
-   return findAllFilesForPattern(directory, "/**/*TestPlan*.csv");
+   return findAllFilesForPattern(directory, "**/*TestPlan*.csv");
 }

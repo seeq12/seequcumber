@@ -104,5 +104,5 @@ export async function parseFeatureFile(
  * Recursively find all features in a root folder
  */
 export function findAllFeatureFiles(directory: string): Promise<string[]> {
-   return findAllFilesForPattern(directory, "/**/*.feature");
+   return findAllFilesForPattern(directory, "**/*.feature");
 }

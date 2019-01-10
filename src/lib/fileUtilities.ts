@@ -19,7 +19,7 @@ export async function findAllFilesForPattern(
    directory: string,
    pattern: string
 ): Promise<string[]> {
-   const fileFindingExpression = directory + pattern;
+   const fileFindingExpression = path.join(directory, pattern);
    return globAsync(fileFindingExpression);
 }
 

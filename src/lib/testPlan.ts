@@ -21,16 +21,14 @@ export function testCaseExists(
    testCase: TestCase,
    testCases: TestCase[]
 ): boolean {
-   return findIndexForTestCase(testCase, testCases) >= 0;
+   return !!findTestCase(testCase, testCases);
 }
 
-export function findIndexForTestCase(
+export function findTestCase(
    testCase: TestCase,
    testCases: TestCase[]
-): number {
-   return testCases.findIndex(
-      item => item.featureName === testCase.featureName
-   );
+): TestCase {
+   return testCases.find(item => item.featureName === testCase.featureName);
 }
 
 export function sortTestCasesByFeatureName(testCases: TestCase[]): TestCase[] {
