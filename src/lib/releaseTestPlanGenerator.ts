@@ -49,18 +49,6 @@ export async function generateReleaseTestPlan(
       }
    }
 
-   testPlans
-      .filter(testPlan => !!testPlan.testCases)
-      .map(testPlan => {
-         testPlan.testCases.map(testCase =>
-            mergeTestCase(
-               testCase,
-               getFilenameFromCsv(testPlan.name),
-               mergedTestCases
-            )
-         );
-      });
-
    const mergedTestPlan: TestPlan = {
       testCases: mergedTestCases,
       name: filename,
@@ -122,7 +110,7 @@ export async function loadTestPlanFromFile(
 ): Promise<TestPlan> {
    const data = await readContentFromFile(filename);
    const version = parseVersionToTest(data);
-   const testPlanScenarios = await parseTestCases(data);
+   const testPlanScenarios = await loadTestCases(data);
 
    return {
       versionToTest: version,
@@ -155,7 +143,7 @@ function parseVersionToTest(data: string): string {
 /**
  * Parse cvs content to get a list of Test Case
  */
-async function parseTestCases(data: string): Promise<TestCase[]> {
+async function loadTestCases(data: string): Promise<TestCase[]> {
    const options = {
       cast: (value: any, _context: any) => {
          if (value === "no") {
