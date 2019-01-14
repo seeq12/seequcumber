@@ -1,5 +1,5 @@
 @manual
-Feature: Capsule Time
+Feature: First Feature
   As a user,
   I want to visually compare capsules of signal data
   So that I can spot important differences.
@@ -10,9 +10,9 @@ Feature: Capsule Time
 
   Scenario: Basic Capsule Time
     When I click "Capsule" in the toolbar to switch to Capsule Time
-      | PASS | 0.40.00-v201811141000 | Tester One |  |
-      | PASS | 0.38.02-v201806292342 | Tester One |  |
-      | PASS | 0.38.01-v201806130941 | Tester One |  |
+      | FAIL | 0.40.00-v201811141000 | Tester One | defect-1 |
+      | PASS | 0.38.02-v201806292342 | Tester One |          |
+      | PASS | 0.38.01-v201806130941 | Tester One |          |
     Then the "Capsule" element is selected
       | PASS | 0.40.00-v201811141001 | Tester One |  |
       | PASS | 0.38.02-v201806292342 | Tester One |  |
@@ -38,9 +38,9 @@ Feature: Capsule Time
 
   Scenario: Capsule Time Alignments
     Given I have many capsules showing in Capsule Time
-      | PASS | 0.40.00-v201811141002 | Tester One |  |
-      | PASS | 0.38.02-v201806292342 | Tester One |  |
-      | PASS | 0.38.01-v201806130941 | Tester One |  |
+      | SKIPPED | 0.40.00-v201811141002 | Tester One |  |
+      | PASS    | 0.38.02-v201806292342 | Tester One |  |
+      | PASS    | 0.38.01-v201806130941 | Tester One |  |
     When I select the "Start" alignment option
       | PASS | 0.40.00-v201811141002 | Tester One |  |
       | PASS | 0.38.02-v201806292342 | Tester One |  |
@@ -53,9 +53,9 @@ Feature: Capsule Time
 
   Scenario: Capsule Time hidden Alignments
     Given I have many capsules showing in Capsule Time
-      | PASS | 0.40.00-v201811141002 | Tester One |  |
-      | PASS | 0.38.02-v201806292342 | Tester One |  |
-      | PASS | 0.38.01-v201806130941 | Tester One |  |
+      | FAIL | 0.40.00-v201811141002 | Tester One | defect-2 |
+      | PASS | 0.38.02-v201806292342 | Tester One |          |
+      | PASS | 0.38.01-v201806130941 | Tester One |          |
     And some of the trends have the opposite slope
       | PASS | 0.40.00-v201811141002 | Tester One |  |
       | PASS | 0.38.02-v201806292342 | Tester One |  |
@@ -138,7 +138,7 @@ Feature: Capsule Time
     When I select several capsules in the Capsules Panel
       | PASS | 0.40.00-v201811141002 | Tester One |  |
     Then the unselected signals become dimmed in the chart
-      | FAIL | 0.40.00-v201811141002 | Test One | BUG-13940 |
+      | FAIL | 0.40.00-v201811141002 | Test One |  |
     When I click the 'Dimming' menu in the toolbar
       | PASS | 0.40.00-v201811141002 | Tester One |  |
     And I check the box 'Show only selected signals'

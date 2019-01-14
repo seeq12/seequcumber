@@ -1,15 +1,22 @@
 import { findAllFilesForPattern } from "./fileUtilities";
 
-describe("File Utilities", () => {
+describe("fileUtilities", () => {
+   const goodFeatureDir = "./test_data/features/first_feature_dir";
+   const goodTestPlanDir = "./test_data/test_plans";
 
-test("should find files following a feature pattermn", async () => {
-  const files = await findAllFilesForPattern(
-    "./test_data/features/first_feature_dir",
-    "/**/*.feature"
-  );
-  expect(files.length).toBe(5);
+   it("find features files with pattern", async () => {
+      const files = await findAllFilesForPattern(
+         goodFeatureDir,
+         "**/*.feature"
+      );
+      expect(files.length).toBe(5);
+   });
+
+   it("finds test plans with pattern", async () => {
+      const files = await findAllFilesForPattern(
+         goodTestPlanDir,
+         "**/*TestPlan*.csv"
+      );
+      expect(files.length).toBe(2);
+   });
 });
-})
-
-
-

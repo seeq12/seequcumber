@@ -1,6 +1,7 @@
 node_modules
 build
 test
+test_results
 src/**.js
 .idea/*
 .vscode/*
@@ -12,3 +13,4 @@ coverage
 yarn.lock
 
 /seequcumber.iml
+
