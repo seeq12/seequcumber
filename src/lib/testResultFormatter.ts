@@ -3,11 +3,15 @@ import fs from "fs";
 import { groupBy } from "lodash";
 import { TestReport } from "./testResult";
 import { writeContentToFile } from "./fileUtilities";
+import path from "path";
 
 export enum Format {
    HTML,
 }
 
+/**
+ * Create Test Result export file
+ */
 export async function exportTo(
    format: Format,
    testReport: TestReport,
@@ -21,17 +25,11 @@ export async function exportTo(
    }
 }
 
-/**
- * Oragnize test result and create html file
- * @param testReport
- * @param filename
- * @returns HTML content
- */
-
 export async function exportToHtml(
    testReport: TestReport,
    filename: string
 ): Promise<string> {
+   // Group results to faciliate HTML export
    const completed = groupBy(
       testReport.testResults.filter(
          result =>
@@ -57,7 +55,8 @@ export async function exportToHtml(
       "groupedFeatureName"
    );
 
-   const template = fs.readFileSync("./src/lib/ejs/index.ejs", "utf-8");
+   const INDEX_FILE = path.join(__dirname, "ejs", "index.ejs");
+   const template = fs.readFileSync(INDEX_FILE, "utf-8");
 
    const data = {
       completed: completed,
@@ -65,7 +64,9 @@ export async function exportToHtml(
       notRequired: notRequired,
       versionToTest: testReport.versionToTest,
    };
-   const options = { filename: "./src/lib/ejs/index.ejs" };
+   const options = {
+      filename: INDEX_FILE,
+   };
 
    const html = ejs.render(template, data, options);
    await writeContentToFile(filename, html);

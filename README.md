@@ -1,144 +1,129 @@
-Seequcumber
-===========
+# Seequcumber
 
-Description
------------
-* Seequcumber aims to enable a manual testing framework through Behavior Driven
-  Development.
-* By utilizing Cucumber feature files to provide scenarios for manual features
-  that need to be tested, Seequcumber is an add-on to Cucumber.js
-* Seequcumber utilizes Cucumber to de-serialize the feature files and
-  subsequently generates a HTML report, containing results of all the Feature
-  files containing manual scenarios, with an overall test status summary table.
+## Description
 
-Feature File Formatting
------------------------
+SeeQucumber is a Gherkin based framework to manage manual test cases.
 
-Seequcumber de-serializes and serializes scenarios from Feature files that are meant for manual testing.
+It automatically generates the following artifacts:
 
-For this, when a Feature file is written, a scenario must have the tag
-`@manual` in order for the serializer to process it, and deduce the state for
-that particular Feature file.
+-  Test Plan template from existing Gherkin feature files
+-  Test Report from the results of manual testing
 
-**Example**:
+## Feature File Formatting
 
+Seequcumber extract scenarios from feature files used in manual testing usig the following format:
+
+1. **Feature tag** `@manual`
+   A tag indicating that this test is manual (as opposed to automated)
+   is required.
+   _Example_
+
+   ```gherkin
     @manual
-    Scenario: ...
+    Feature: ...
+        Scenario: ...
+
+   ```
+
+   >
+
+2. **Test Run Result**
+   Scenarios contains steps with a table containing the result of the manual test. The table can contain several rows to indicate multiple executions.
+   _Example_
+
+   ```gherkin
+   Scenario: ...
         When ...
-        Then ...
-Every Scenario must contain steps that have a test result table attached to it
-below. Otherwise, the step would be deemed **incomplete**. Test results should
-be attached to steps as follows:
+            |<Result>|<Version>|<Tester>|<Defect>|
+   ```
 
-    When ...
-        |<Result>|<Version>|<Tester>|<Defect>|
-**Results** can be:
+>
 
-* PASSED (or PASS)
-* FAILED (or FAIL)
-* SKIPPED (or SKIP)
+3. **Results**
+   The result of the manual test.
 
-Usage
------
+   ```gherkin
+   PASSED (or PASS)
+   FAILED (or FAIL)
+   SKIPPED (or SKIP)
+   ```
+
+   >
+
+4. **Version**
+   The version of the software that was tested.
+   _Example_ `40.00.11`
+
+   >
+
+5. **Tester** (Optional)  
+   Name of tester who executed this test case.
+
+   >
+
+6. **Defect** (Optional)
+   The ticket number(s) for defects filed for this step
+   >
+
+## Usage
+
 Seequcumber is available as an npm module.
 
 Install globally with:
 
-``` shell
+```shell
 $ npm install -g seequcumber
 ```
 
 Install as a development dependency of your application with:
 
-``` shell
+```shell
 $ npm install --save-dev seequcumber
 ```
 
 It should then be instantiated in your Javascript file.
 
-``` javascript
-var Seequcumber = require('seequcumber')
-var seequcumber = new Seequcumber()
+```javascript
+let Seequcumber = require("seequcumber");
+let seequcumber = new Seequcumber();
 ```
 
-The Seequcumber module has three in-built commands:
+The Seequcumber module has two commands:
 
-* `deserializer`
-* `serializer`
-* `renderHTML`
+```javascript
+/**
+ * generateTestPlan
+ *
+ * Generate a Test Plan from a directory of Gherkin files
+ * @param featureDirectory: Directory of Gherkin feature files
+ * @param testPlanFilename: Filename of generated Test Plan
+ * @param versionToTest: Target version of the software to test
+ */
+```
 
-**The `deserializer` function**
+```javascript
+/**
+ * generateHtmlReport
+ *
+ * Generate a Test Report from a Test Plan and directory containing Gherkin files
+ * @param featureDirectory Directory of Gherkin feature files
+ * @param testPlanFilename Filename of Test Plan
+ * @param reportFilenme  Filename of HTML report
+ */
+```
 
-*Input*: `directory`: folder in which feature files are contained
-
-*Functions*: 
-
-* `.deserialize()`: calls all the other functions and returns collection of all
-  Feature files as an object in memory
-* `.files()`: returns array of names of all Feature files in a directory
-* `.getSources()`: returns array of all Feature files read into memory
-* `.readFeatures()`: feeds in array of Feature files as String and uses
-  Cucumber to parse into Feature file objects, and stores it in memory
-* `.getFeatures()`: returns collection of all Feature files as an object in memory
-* `.addTestResults()`: adds test result object in a test result table to each step
-
-
-**The `serializer` function**
-
-*Input*: 
-
-* `feature`: Cucumber Feature object as outlined by Cucumber.js AST
-* `fileName`: name for output Feature file
-
-*Functions*: 
-
-* `.write()`: calls all the other functions and writes Feature file
-* `.writeDescription()`: returns stringified Description object
-* `.writeBackground()`: returns stringified Background object
-* `.writeScenario()`: returns stringified Scenario object
-* `.writeStep()`: returns stringified Step object
-* `.writeRawTable()`: returns stringified data table object
-* `.writeTest()`: returns stringified test result object
-* `.checkForDescription()`: checks if Cucumber AST object has a non-empty
-  description object, and then calls `.writeDescription()`
-* `.checkForBackground()`: checks if Cucumber AST object has a non-empty
-  background object, and then calls `.writeBackground()`
-* `.writeFirstLine()`: returns string that contains the Cucumber AST object's
-  keyword, and name properties
-
-**The `renderHTML` function**
-
-*Input*: 
-
-* `payload`: Javascript object that contains two items:
-    * `version`: RegExp object that specifies versions to be filtered for HTML rendering
-    * `directory`: directory string that contains directories that contain Feature files to be processed
-
-*Output*: 
-
-* `html`: html string after all directories are processed
-
-
-
-
-Third-party libraries
----------------------
+## Third-party libraries
 
 The following third-party libraries are used by this module:
 
-* cucumber-js: https://github.com/cucumber/cucumber-js -  to handle parsing of Cucumber Feature files
-* ejs: https://github.com/tj/ejs - for dynamic HTML processing of multiple Javascript objects
+-  cucumber-js: https://github.com/cucumber/cucumber-js - to handle parsing of Cucumber Feature files
+-  ejs: https://github.com/tj/ejs - for dynamic HTML processing of multiple Javascript objects
 
-
-
-
-
-Seequcumber Development
------------------------
+## Seequcumber Development
 
 Clone the repo and install dependencies:
 
-``` shell
+```shell
 git clone https://github.com/seeq12/seequcumber.git
 cd seequcumber
 npm install
@@ -146,6 +131,8 @@ npm install
 
 Run the tests:
 
-``` shell
+```shell
 npm test
 ```
+
+>

@@ -15,11 +15,13 @@ describe("featureProcessor", () => {
    });
 
    it("handles feature file with parsing errors", async () => {
+      let errorMessage;
       try {
          await loadFeaturesFrom(badFeatureDir);
       } catch (error) {
-         expect(error.toString()).toContain("Gherkin Parsing Error");
+         errorMessage = error.toString();
       }
+      expect(errorMessage).toContain("Gherkin Parsing Error");
    });
 
    it("gets feature objects from a file", async () => {

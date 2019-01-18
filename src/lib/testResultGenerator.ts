@@ -3,7 +3,7 @@ import { exportTo, Format } from "./testResultFormatter";
 import { Feature, TestCase, TestPlan } from "./testPlan";
 import { flatten, head, sortBy } from "lodash";
 import { io } from "cucumber-messages";
-import { loadTestPlanFromFile } from "./releaseTestPlanGenerator";
+import { loadTestPlanFromFile } from "./testPlanGenerator";
 import {
    TestResult,
    TestReport,

@@ -1,7 +1,6 @@
 import { generateTestReport } from "./testResultGenerator";
 import { TestResult, Status } from "./testResult";
 import { some } from "lodash";
-import { loadTestCases } from "./releaseTestPlanGenerator";
 import { Format } from "./testResultFormatter";
 
 describe("testResultGenerator", () => {
@@ -64,28 +63,25 @@ describe("testResultGenerator", () => {
 
       const passStatus = Status.getStatusFor(Status.PASS);
       expect(passStatus).toBe("PASS");
+      const passedStatus = Status.getStatusFor("passed");
+      expect(passedStatus).toBe("PASS");
 
       const failStatus = Status.getStatusFor(Status.FAIL);
       expect(failStatus).toBe("FAIL");
-   });
+      const failedStatus = Status.getStatusFor("FAILED");
+      expect(failedStatus).toBe("FAIL");
 
-   it("loads test cases from csv rows", async () => {
-      const data =
-         "Version To Test\n" +
-         "0.40.00\n" +
-         "Feature,Required,Required By\n" +
-         "First Feature,yes,\n";
-      const testCases = await loadTestCases(data);
-
-      const firstTestCase = testCases[0];
-      expect(firstTestCase.groupedFeatureName).toBe("First Feature");
+      const skipStatus = Status.getStatusFor(Status.SKIP);
+      expect(skipStatus).toBe("SKIP");
+      const skippedStatus = Status.getStatusFor("passed");
+      expect(skippedStatus).toBe("PASS");
    });
 
    it("generates a HTML test report", async () => {
       const report = await generateTestReport(
          goodFeatureDir,
-         "./test_data/release_test_plans/Release-1-TestPlan.csv",
-         "./test_results/testReportByGenerator.html",
+         "./test_data/test_plans/Story-1-TestPlan.csv",
+         "./test_results/TestReportByGenerator.html",
          Format.HTML
       );
       expect(report.versionToTest).toBe("0.40.00");

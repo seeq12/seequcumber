@@ -1,20 +1,26 @@
 {
    "name": "seequcumber",
-   "version": "1.0.1",
+   "version": "0.4.12",
    "description": "Tool for utilizing Gherkin files for manual testing.",
-   "main": "build/main/index.js",
-   "typings": "build/main/index.d.ts",
-   "module": "build/module/index.js",
+   "main": "build/main/seequcumber.js",
+   "typings": "build/main/seequcumber.d.ts",
+   "module": "build/main/seequcumber.js",
    "repository": "https://github.com/seeq12/seequcumber",
    "license": "MIT",
+   "licenses": [
+      {
+         "type": "MIT",
+         "url": "https://github.com/seeq12/seequcumber/blob/master/LICENSE"
+      }
+   ],
    "keywords": [],
    "bin": {
-      "seequcumber": "build/main/index.js"
+      "seequcumber": "build/main/seequcumber.js"
    },
    "scripts": {
       "info": "npm-scripts-info",
       "build": "run-s clean && run-p build:*",
-      "build:main": "tsc -p tsconfig.json",
+      "build:main": "tsc -p tsconfig.json && copyfiles -u 2 \"./src/lib/ejs/*.ejs\" \"./build/main/lib\"",
       "build:module": "tsc -p tsconfig.module.json",
       "test": "run-s build test:*",
       "test:unit": "jest --no-cache",
