@@ -2,7 +2,7 @@
    "compilerOptions": {
       "target": "es2016",
       "module": "commonjs",
-      "outDir": "build/main",
+      "outDir": "dist",
       "rootDir": "src",
       "declaration": true,
       "sourceMap": true,
@@ -33,5 +33,5 @@
       "typeRoots": ["node_modules/@types"]
    },
    "include": ["src/**/*.ts"],
-   "exclude": ["node_modules/**", "build/**"]
+   "exclude": ["node_modules/**", "dist/**"]
 }
