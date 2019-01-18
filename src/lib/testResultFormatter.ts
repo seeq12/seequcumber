@@ -10,7 +10,7 @@ export enum Format {
 }
 
 /**
- * Create Test Result export file
+ * Create Test Result exported file
  */
 export async function exportTo(
    format: Format,
