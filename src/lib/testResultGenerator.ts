@@ -12,7 +12,6 @@ import {
    StepResults,
    Status,
 } from "./testResult";
-import IFeature = io.cucumber.messages.IFeature;
 import IScenario = io.cucumber.messages.IScenario;
 import IStep = io.cucumber.messages.IStep;
 import ITableRow = io.cucumber.messages.ITableRow;
@@ -77,7 +76,7 @@ export async function loadTestResults(
  * Gather test results for this feature's scenarios
  * @param feature
  */
-function getScenarioResults(feature: IFeature): ScenarioResults[] {
+function getScenarioResults(feature: Feature): ScenarioResults[] {
    return (
       sortBy(feature.children, "scenario.name")
          // keep only valid scenarios

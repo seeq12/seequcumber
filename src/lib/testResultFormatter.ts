@@ -1,9 +1,9 @@
 import ejs from "ejs";
 import fs from "fs";
+import path from "path";
 import { groupBy } from "lodash";
 import { TestReport } from "./testResult";
 import { writeContentToFile } from "./fileUtilities";
-import path from "path";
 
 export enum Format {
    HTML,
