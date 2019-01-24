@@ -1,17 +1,12 @@
-@journal
+@sometag
 Feature: Fourth Feature
   As a user,
-  I want a Journal
-  So that I can record my thoughts and annotate things
+  I want a test a not required feature
+  So that I can verify the report is generated correctly
 
   Background:
-    Given Seeq is running as an admin user
-    And the help is closed
-    And Seeq data has been reset
-    And a workbook with a multi-line journal entry and an annotation
+    Given a background
 
-  Scenario: Searching for Name should not match journal entry/annotations
-    When I click on the Data tab
-    And I search for "journal" in the "Name" field
-    Then no search results are shown
-
+  Scenario: A non required feature scenario
+    When step not completed
+    Then step not completed

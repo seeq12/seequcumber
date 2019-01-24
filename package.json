@@ -1,6 +1,6 @@
 {
    "name": "seequcumber",
-   "version": "0.4.12",
+   "version": "1.0.0",
    "description": "Gherkin based framework to manage manual test cases.",
    "main": "dist/lib/seequcumber.js",
    "typings": "dist/lib/seequcumber.d.ts",

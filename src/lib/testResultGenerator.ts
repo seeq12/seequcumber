@@ -15,6 +15,7 @@ import {
 import IScenario = io.cucumber.messages.IScenario;
 import IStep = io.cucumber.messages.IStep;
 import ITableRow = io.cucumber.messages.ITableRow;
+import { get } from "lodash";
 
 /**
  * Generate a test report for test plan
@@ -102,13 +103,7 @@ function getScenarioResults(feature: Feature): ScenarioResults[] {
  */
 function getStepResults(scenario: IScenario): StepResults[] {
    return scenario.steps
-      .filter(
-         step =>
-            !!step &&
-            !!step.dataTable &&
-            !!step.dataTable.rows &&
-            step.dataTable.rows.length > 0
-      )
+      .filter(step => get(step, "dataTable.rows.length", 0) > 0)
       .map(step => getLatestStepResult(step));
 }
 
@@ -121,34 +116,44 @@ function getStepResults(scenario: IScenario): StepResults[] {
  * @param step
  */
 function getLatestStepResult(step: IStep): StepResults {
-   const rows = step.dataTable.rows;
+   const resultRow = step.dataTable.rows;
+   const STATUS_INDEX = 0;
+   const VERSION_INDEX = 1;
+   const DEFECT_INDEX = 3;
 
    // Keep only the latest test result
    const reducer = (latest: string, row: ITableRow): string => {
       const stepVersion = !!row.cells
-         ? row.cells[1].value.toString().trim()
+         ? row.cells[VERSION_INDEX].value.toString().trim()
          : undefined;
       return !!stepVersion && stepVersion > latest ? stepVersion : latest;
    };
-   const latestVersion = rows.reduce(reducer, "");
+   const latestVersion = resultRow.reduce(reducer, "");
 
-   // Find test results for the latest test result
-   const result = rows.find(row => {
-      return row.cells[1].value.includes(latestVersion);
+   // Find latest test results
+   const latestResult = resultRow.find(row => {
+      return row.cells[VERSION_INDEX].value.includes(latestVersion);
    });
 
-   const statusContent = result.cells[0].value.trim();
-   const defect = result.cells[3].value.trim();
+   const statusContent =
+      !!latestResult && latestResult.cells[STATUS_INDEX].value.trim();
+   const status = !!statusContent
+      ? Status.getStatusFor(statusContent)
+      : Status.UNDEFINED;
+
+   const defect = !!latestResult
+      ? latestResult.cells[DEFECT_INDEX].value.trim()
+      : "";
 
    return {
       version: latestVersion,
-      status: Status.getStatusFor(statusContent),
+      status: status,
       defect: defect,
    };
 }
 
 /**
- * The feature's version is the earlier when all scenarios were run
+ * The feature's version is the earliest when all scenarios were run
  * @param results
  */
 function getFeatureVersion(results: ScenarioResults[]): string {
@@ -170,7 +175,7 @@ function getScenarioVersion(results: StepResults[]): string {
  * @param versions
  */
 function getLastestVersion(versions: string[]): string {
-   return head(versions.sort((left, right) => (left > right ? 1 : -1)));
+   return head(versions.sort().reverse());
 }
 
 /**
@@ -213,9 +218,11 @@ function getResultForFeature(
       ...testCase,
       scenarioName: "",
       isCompleted: !!results
-         ? getIsCompleted(results.version, versionToTest)
+         ? isCompleted(results.version, versionToTest)
          : false,
-      status: !!results ? getFeatureStatus(results) : Status.UNDEFINED,
+      status: !!results
+         ? getFeatureStatus(versionToTest, results)
+         : Status.UNDEFINED,
       defects: !!results ? getFeatureDefects(results) : "",
    };
 }
@@ -229,9 +236,11 @@ function getResultForScenario(
       ...testCase,
       scenarioName: results.name,
       isCompleted: !!results
-         ? getIsCompleted(results.version, versionToTest)
+         ? isCompleted(results.version, versionToTest)
          : false,
-      status: !!results ? getScenarioStatus(results) : Status.UNDEFINED,
+      status: !!results
+         ? getScenarioStatus(versionToTest, results)
+         : Status.UNDEFINED,
       defects: !!results ? getScenarioDefects(results) : "",
    };
 }
@@ -241,17 +250,27 @@ function getResultForScenario(
  * @param result
  * @param versionToTest
  */
-function getIsCompleted(result: string, versionToTest: string): boolean {
-   return result >= versionToTest ? true : false;
+function isCompleted(result: string, versionToTest: string): boolean {
+   return result >= versionToTest;
 }
 
 /**
  * A feature's status is the summary of scenarios statuses
  * @param results
  */
-function getFeatureStatus(results: FeatureResults): Status {
+function getFeatureStatus(
+   versionToTest: string,
+   results: FeatureResults
+): Status {
+   // Only keep results relevant to the version under test
+   const relevantResults = results.scenarios.filter(
+      scenario => !!scenario.version && scenario.version > versionToTest
+   );
+
    const scenarioStatuses: Status[] = flatten(
-      results.scenarios.map(scenario => getScenarioStatus(scenario))
+      relevantResults.map(scenario =>
+         getScenarioStatus(versionToTest, scenario)
+      )
    );
    return getSummaryStatus(scenarioStatuses);
 }
@@ -260,8 +279,16 @@ function getFeatureStatus(results: FeatureResults): Status {
  * A scenario's status is the summary of step statuses
  * @param results
  */
-function getScenarioStatus(results: ScenarioResults): Status {
-   const statuses: Status[] = flatten(results.steps.map(step => step.status));
+function getScenarioStatus(
+   versionToTest: string,
+   results: ScenarioResults
+): Status {
+   // Only keep results relevant to the version under test
+   const relevantResults = results.steps.filter(
+      step => !!step.version && step.version > versionToTest
+   );
+
+   const statuses: Status[] = flatten(relevantResults.map(step => step.status));
    return getSummaryStatus(statuses);
 }
 
@@ -270,26 +297,24 @@ function getScenarioStatus(results: ScenarioResults): Status {
  * @param statuses
  */
 function getSummaryStatus(statuses: Status[]): Status {
-   if (!!statuses) {
-      const hasFailed = statuses.some(
-         status => !!status && status === Status.FAIL
-      );
+   const hasFailed = statuses.some(
+      status => !!status && status === Status.FAIL
+   );
 
-      const hasSkipped = statuses.some(
-         status => !!status && status == Status.SKIP
-      );
+   const hasSkipped = statuses.some(
+      status => !!status && status == Status.SKIP
+   );
 
-      const hasPassed = statuses.every(
-         status => !!status && status === Status.PASS
-      );
+   const hasPassed = statuses.every(
+      status => !!status && status === Status.PASS
+   );
 
-      if (hasFailed) {
-         return Status.FAIL;
-      } else if (hasSkipped) {
-         return Status.SKIP;
-      } else if (statuses.length > 0 && hasPassed) {
-         return Status.PASS;
-      }
+   if (hasFailed) {
+      return Status.FAIL;
+   } else if (hasSkipped) {
+      return Status.SKIP;
+   } else if (statuses.length > 0 && hasPassed) {
+      return Status.PASS;
    }
    return Status.UNDEFINED;
 }

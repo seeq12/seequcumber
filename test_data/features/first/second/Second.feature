@@ -1,46 +1,14 @@
-@manual
+@sometag
 Feature: Second Feature
-  As a Formula user,
-  I want to be able manage and display formula variables,
-  So that I can be efficient when using the tool.
+  As a user,
+  I want a test a not required feature
+  So that I can verify the report is generated correctly
 
   Background:
-    Given that Seeq is running in the browser
-    And I add to the display pane three items relative to an asset
-    And the Formula tool is displayed
-      """
-      Comment Docstring
-      """
-    And the three details pane items appear as formula variables
+    Given a background
 
-  Scenario: Function documentation formatting
-    When the Formula pane is expanded
-      | PASS | 0.38.00-v201804061000 | Tester One |  |
-    And I type "overlap" into the function search input
-      | PASS | 0.38.00-v201804061000 | Tester One |  |
-      | PASS | 0.36.01-v201801170334 | Tester One |  |
-      | PASS | 0.36.00-v201711181534 | Tester One |  |
-    And I click on the "overlappedBy" function variation
-      | PASS | 0.38.00-v201804061000 | Tester One |  |
-      | PASS | 0.36.01-v201801170334 | Tester One |  |
-      | PASS | 0.36.00-v201711181534 | Tester One |  |
-    Then I see the description, and below it is a text diagram of input and output capsules, in monospaced font.
-      | PASS | 0.38.00-v201804061001 | Tester One |  |
-      | PASS | 0.36.01-v201801170334 | Tester One |  |
-      | PASS | 0.36.00-v201711181534 | Tester One |  |
-
-  Scenario: Function documentation not expanded
-    When the Formula pane is not expanded
-      | PASS | 0.38.00-v201804061000 | Tester One |  |
-    And I type "overlap" into the function search input
-      | PASS | 0.38.00-v201804061000 | Tester One |  |
-      | PASS | 0.36.01-v201801170334 | Tester One |  |
-      | PASS | 0.36.00-v201711181534 | Tester One |  |
-    And I click on the "overlappedBy" function variation
-      | PASS | 0.38.00-v201804061000 | Tester One |  |
-      | PASS | 0.36.01-v201801170334 | Tester One |  |
-      | PASS | 0.36.00-v201711181534 | Tester One |  |
-    Then I see the description, and below it is a text diagram of input and output capsules, in monospaced font.
-      | PASS | 0.38.00-v201804061001 | Tester One |  |
-      | PASS | 0.36.01-v201801170334 | Tester One |  |
-      | PASS | 0.36.00-v201711181534 | Tester One |  |
+  Scenario: A non required feature scenario
+    When step not completed in previous version but not required
+      | PASS | 0.38.01-v201806130941 | Tester One |  |
+    Then step not completed in previous version but not required
+      | PASS | 0.38.01-v201806130941 | Tester One |  |

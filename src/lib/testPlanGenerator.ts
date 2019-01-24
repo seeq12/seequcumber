@@ -58,7 +58,7 @@ export async function loadTestPlanFromFile(
 }
 
 /**
- * Parse csv content to get the version to test
+ * Parse CSV content to get the version to test
  */
 function parseVersionToTest(data: string): string {
    const options = {
@@ -79,7 +79,7 @@ function parseVersionToTest(data: string): string {
 }
 
 /**
- * Parse cvs content to get a list of Test Case
+ * Parse CSV content to get a list of Test Case
  */
 async function parseTestCases(data: string): Promise<TestCase[]> {
    const options = {

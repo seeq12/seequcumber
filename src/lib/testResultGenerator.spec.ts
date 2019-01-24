@@ -1,6 +1,5 @@
 import { generateTestReport } from "./testResultGenerator";
-import { TestResult, Status } from "./testResult";
-import { some } from "lodash";
+import { TestResult, Status, TestReport } from "./testResult";
 import { Format } from "./testResultFormatter";
 
 describe("testResultGenerator", () => {
@@ -8,7 +7,7 @@ describe("testResultGenerator", () => {
 
    const failed: TestResult = {
       groupedFeatureName: "/first/First",
-      scenarioName: "Basic Capsule Time",
+      scenarioName: "Scenario 3 failed with defect",
       requiredBy: "Story-1",
       isRequired: true,
       isCompleted: true,
@@ -18,7 +17,7 @@ describe("testResultGenerator", () => {
 
    const passed: TestResult = {
       groupedFeatureName: "/first/First",
-      scenarioName: "Adjusting Conditions in the Details Panel",
+      scenarioName: "Scenario 1 passed",
       requiredBy: "Story-1",
       isRequired: true,
       isCompleted: true,
@@ -28,17 +27,17 @@ describe("testResultGenerator", () => {
 
    const todo: TestResult = {
       groupedFeatureName: "/first/First",
-      scenarioName: "Limiting the number of capsule series for performance",
+      scenarioName: "Scenario 8 all steps incomplete",
       requiredBy: "Story-1",
       isRequired: true,
       isCompleted: false,
       defects: "",
-      status: Status.PASS,
+      status: Status.UNDEFINED,
    };
 
    const skipped: TestResult = {
       groupedFeatureName: "/first/First",
-      scenarioName: "Capsule Time Alignments",
+      scenarioName: "Scenario 2",
       requiredBy: "Story-1",
       isRequired: true,
       isCompleted: true,
@@ -48,8 +47,7 @@ describe("testResultGenerator", () => {
 
    const notRequired: TestResult = {
       groupedFeatureName: "/first/second/Fourth",
-      scenarioName:
-         "Searching for Name should not match journal entry/annotations",
+      scenarioName: "A non required feature scenario",
       requiredBy: "",
       isRequired: false,
       isCompleted: false,
@@ -85,10 +83,17 @@ describe("testResultGenerator", () => {
          Format.HTML
       );
       expect(report.versionToTest).toBe("0.40.00");
-      expect(some(report.testResults, failed)).toBe(true);
-      expect(some(report.testResults, passed)).toBe(true);
-      expect(some(report.testResults, todo)).toBe(true);
-      expect(some(report.testResults, skipped)).toBe(true);
-      expect(some(report.testResults, notRequired)).toBe(true);
+
+      expect(getResult(failed.scenarioName, report)).toEqual(failed);
+      expect(getResult(passed.scenarioName, report)).toEqual(passed);
+      expect(getResult(todo.scenarioName, report)).toEqual(todo);
+      expect(getResult(skipped.scenarioName, report)).toEqual(skipped);
+      expect(getResult(notRequired.scenarioName, report)).toEqual(notRequired);
    });
 });
+
+function getResult(scenarioName: string, report: TestReport): TestResult {
+   return report.testResults.find(
+      scenario => scenario.scenarioName === scenarioName
+   );
+}
