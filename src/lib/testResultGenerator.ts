@@ -26,8 +26,8 @@ import { get } from "lodash";
 export async function generateTestReport(
    featureRootDirectory: string,
    testPlanFilename: string,
-   reportFilename: string,
-   format: Format
+   reportFilename: string = "TestReport",
+   format: Format = Format.HTML
 ): Promise<TestReport> {
    const testPlan: TestPlan = await loadTestPlanFromFile(testPlanFilename);
 

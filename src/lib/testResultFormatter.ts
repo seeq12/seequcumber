@@ -68,7 +68,11 @@ export async function exportToHtml(
       filename: INDEX_FILE,
    };
 
-   const html = ejs.render(template, data, options);
-   await writeContentToFile(filename, html);
-   return html;
+   const htmlContent = ejs.render(template, data, options);
+
+   await writeContentToFile(
+      filename.endsWith(".html") ? filename : filename.concat(".html"),
+      htmlContent
+   );
+   return htmlContent;
 }

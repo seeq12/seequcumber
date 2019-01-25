@@ -59,6 +59,7 @@
       "node": ">=8.9"
    },
    "dependencies": {
+      "commander": "^2.19.0",
       "csv-parse": "^4.1.0",
       "csv-stringify": "^5.1.1",
       "gherkin": "^6.0.15",

@@ -17,14 +17,14 @@ const RECORD_DELIMITER = ["\n", "\r\n", "\r"];
  */
 export async function generateTemplate(
    featureDirectory: string,
-   filename: string,
-   versionToTest: string
+   filename: string = "TestPlan",
+   versionToTest: string = ""
 ): Promise<string> {
    const features = await loadFeaturesFrom(featureDirectory);
    const testCases = generateTestCases(features);
    return exportTestPlanToCsv({
       versionToTest,
-      name: filename,
+      name: filename.endsWith("csv") ? filename : filename.concat(".csv"),
       testCases,
    });
 }
