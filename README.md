@@ -43,7 +43,7 @@ For example:
 Test Plan version to test: 0.40.0
 Feature File version tested: 0.40.20190125 (version 0.40 built on Jan 25th 2019)
 
-## CLI
+## CLI Options
 
 -tp, --testPlan
 Create a new Test Plan
@@ -63,6 +63,7 @@ Usage information
 Examples:
 
 seequcumber --testPlan --featureDir "./dir"
+
 seequcumber --testReport --testPlanFilename "./myTestPlan.csv" --featureDir "/dir"
 
 ## Feature File Formatting
