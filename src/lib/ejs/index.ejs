@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test Report</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h2 {
+            padding-bottom: 0.25em;
+        }
+
+        table {
+            width: 100%;
+            padding:10px;
+        }
+
+        th, td {
+            padding: 0.20em;
+            text-align: left; 
+        }
+      
+        th {
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr {
+            border-bottom: 1px solid #ddd;
+        }
+   
+        td {
+            margin: 0px;
+            padding: 3px;
+        }
+
+        .pass {
+            background-color: #DDFFDD;
+        }
+
+        .fail {
+            background-color: #FFDDDD;
+        }
+
+        .skip {
+            background-color: #DCDCDC;
+        }
+
+        .legend {
+            padding:5px;
+        }
+
+        /* collapsible */
+        .wrap-collabsible {
+            margin-bottom: 0.25rem 0;
+        }
+
+        input[type='checkbox'] {
+            display: none;
+        }
+
+        .lbl-toggle {
+            display: block;
+            font-weight: bold;
+            text-align: left;
+            padding: 0.25rem 0.25rem; 
+            color: black;     
+            cursor: pointer;   
+            transition: all 0.25s ease-out;
+        }
+
+        .lbl-toggle:hover {
+            color: #A0A0A0;
+        }
+
+        .lbl-toggle::before {
+            content: ' ';
+            display: inline-block;
+
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 5px solid currentColor;
+            vertical-align: middle;
+            margin-right: .7rem;
+            transform: translateY(-2px);
+
+            transition: transform .2s ease-out;
+        }
+
+        .toggle:checked + .lbl-toggle::before {
+            transform: rotate(90deg) translateX(-3px);
+        }
+
+        .collapsible-content {
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height .25s ease-in-out;
+        }
+
+        .toggle:checked + .lbl-toggle + .collapsible-content {
+            max-height: 1000px;
+        }
+
+        .toggle:checked + .lbl-toggle {
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .collapsible-content .content-inner {
+            border-bottom-left-radius: 7px;
+            border-bottom-right-radius: 7px;
+            padding: .15rem .20rem;
+        }
+    </style>
+</head>
+<body> 
+    <h3>Version: <%= versionToTest %><h3>
+    <%- include('todo') %>
+    <%- include('completed') %>
+    <%- include('notRequired') %>
+</body>
+</html>

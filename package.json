@@ -1,38 +1,44 @@
 {
    "name": "seequcumber",
-   "version": "1.0.1",
-   "description": "Tool for utilizing Gherkin files for manual testing.",
-   "main": "build/main/index.js",
-   "typings": "build/main/index.d.ts",
-   "module": "build/module/index.js",
+   "version": "1.0.0",
+   "description": "Gherkin based framework to manage manual test cases.",
+   "main": "dist/lib/seequcumber.js",
+   "typings": "dist/lib/seequcumber.d.ts",
+   "module": "dist/module/seequcumber.js",
    "repository": "https://github.com/seeq12/seequcumber",
    "license": "MIT",
+   "licenses": [
+      {
+         "type": "MIT",
+         "url": "https://github.com/seeq12/seequcumber/blob/master/LICENSE"
+      }
+   ],
    "keywords": [],
    "bin": {
-      "seequcumber": "build/main/index.js"
+      "seequcumber": "dist/lib/seequcumber.js"
    },
    "scripts": {
       "info": "npm-scripts-info",
       "build": "run-s clean && run-p build:*",
-      "build:main": "tsc -p tsconfig.json",
+      "build:main": "tsc -p tsconfig.json && copyfiles -u 2 \"./src/lib/ejs/*.ejs\" \"./dist/lib\"",
       "build:module": "tsc -p tsconfig.module.json",
       "test": "run-s build test:*",
       "test:unit": "jest --no-cache",
       "fix": "run-s fix:*",
       "fix:tslint": "tslint --fix --project .",
       "fix:prettier": "prettier \"src/**/*.ts\" --write",
-      "watch": "run-s clean build:main && run-p \"build:main -- -w\" \"test:unit -- --watch\"",
+      "watch": "run-s clean dist && run-p \"dist -- -w\" \"test:unit -- --watch\"",
       "cov": "run-s build test:unit cov:html && opn coverage/index.html",
       "cov:html": "nyc report --reporter=html",
       "cov:send": "nyc report --reporter=lcov > coverage.lcov && codecov",
       "cov:check": "nyc report && nyc check-coverage --lines 100 --functions 100 --branches 100",
-      "doc": "run-s doc:html && opn build/docs/index.html",
-      "doc:html": "typedoc src/ --target ES6 --mode file --out build/docs",
-      "doc:json": "typedoc src/ --target ES6 --mode file --json build/docs/typedoc.json",
-      "doc:publish": "gh-pages -m \"[ci skip] Updates\" -d build/docs",
+      "doc": "run-s doc:html && opn dist/docs/index.html",
+      "doc:html": "typedoc src/ --target ES6 --mode file --out dist/docs",
+      "doc:json": "typedoc src/ --target ES6 --mode file --json dist/docs/typedoc.json",
+      "doc:publish": "gh-pages -m \"[ci skip] Updates\" -d dist/docs",
       "version": "standard-version",
       "reset": "git clean -dfx && git reset --hard && npm i",
-      "clean": "rimraf build test_results",
+      "clean": "rimraf dist test_results",
       "all": "run-s reset test cov:check doc:html",
       "prepare-release": "run-s all version doc:publish"
    },
@@ -53,6 +59,7 @@
       "node": ">=8.9"
    },
    "dependencies": {
+      "commander": "^2.19.0",
       "csv-parse": "^4.1.0",
       "csv-stringify": "^5.1.1",
       "gherkin": "^6.0.15",

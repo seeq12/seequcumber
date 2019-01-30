@@ -34,24 +34,25 @@ export interface TestReport {
 }
 
 export interface TestResult extends TestCase {
+   scenarioName: string;
    isCompleted: boolean;
    status: Status;
    defects: string;
 }
 
 // Extracted from Feature file
-export interface FeatureRun {
+export interface FeatureResults {
    name: string;
    version: string;
-   scenarios: ScenarioRun[];
+   scenarios: ScenarioResults[];
 }
-export interface ScenarioRun {
+export interface ScenarioResults {
    name: string;
    version: string;
-   steps: StepRun[];
+   steps: StepResults[];
 }
 
-export interface StepRun {
+export interface StepResults {
    version: string;
    status: Status;
    defect: string;

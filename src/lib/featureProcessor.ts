@@ -9,7 +9,7 @@ import path from "path";
 /**
  * Recursively traverses a directory to tranform all feature files into a sorted list of Gherkin Features
  *      sorted by the feature.name
- * @param directory Root directories to search recursively
+ * @param rootDirectory Root directories to search recursively
  * @returns         List of Gherkin Features
  */
 export async function loadFeaturesFrom(
@@ -55,15 +55,20 @@ export async function loadFeaturesFrom(
 }
 
 function formatFeatureFilename(name: string): string {
-   return name
+   const withSubfolder = name
       .replace(".feature", "")
-      .replace("features", "")
-      .replace("behavior", "")
       .replace(new RegExp("\\.+", "g"), "")
-      .replace("manual", "")
-      .replace("test_data", "")
       .replace(new RegExp("/+", "g"), "/")
-      .replace(new RegExp(`${path.sep}+`, "g"), path.sep);
+      .replace(new RegExp(`${path.sep}+`, "g"), path.sep)
+      .split("/");
+
+   // we want the second from last seperator (first sub directorty)
+   return (
+      "/" +
+      withSubfolder[withSubfolder.length - 2] +
+      "/" +
+      withSubfolder[withSubfolder.length - 1]
+   );
 }
 
 /**

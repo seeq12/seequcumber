@@ -6,7 +6,9 @@ export interface Feature extends IFeature {
    filename: string;
 }
 export interface TestCase {
-   featureName: string;
+   // groupedFeatureName includes one level of subdirectory name
+   // to sort related features according to their domain
+   groupedFeatureName: string;
    isRequired: boolean;
    requiredBy: string;
 }
@@ -17,20 +19,6 @@ export interface TestPlan {
    testCases: TestCase[];
 }
 
-export function testCaseExists(
-   testCase: TestCase,
-   testCases: TestCase[]
-): boolean {
-   return !!findTestCase(testCase, testCases);
-}
-
-export function findTestCase(
-   testCase: TestCase,
-   testCases: TestCase[]
-): TestCase {
-   return testCases.find(item => item.featureName === testCase.featureName);
-}
-
 export function sortTestCasesByFeatureName(testCases: TestCase[]): TestCase[] {
-   return sortBy(testCases, ["featureName"]);
+   return sortBy(testCases, ["groupedFeatureName"]);
 }
