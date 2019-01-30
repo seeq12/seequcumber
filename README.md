@@ -35,9 +35,9 @@ testReport
 
 Creates a new Test Report from a Test Plan and directory of Gherkin files. Once generated, the html report can be found in the current directory.
 
-To evaluate if a required scenario has been completed, each scenario's "version tested" [example](/test_data/features/first/First.feature)) is compared the "version to test" from the Test Plan([example](/test_data/test_plans/Story-1-TestPlan.csv)).
+To evaluate if a required scenario has been completed, each scenario's "version tested" ([example](/test_data/features/first/First.feature)) is compared the "version to test" from the Test Plan ([example](/test_data/test_plans/Story-1-TestPlan.csv)).
 
-This comparison uses a string sort (not a natural sort). Ensure that the Test Plan's version to test matches the format of the feature file.
+This comparison uses a string sort (as opossed to a natural sort). It is required that the Test Plan's "version to test" matches the format of the feature file "version tested".
 
 For example:
 Test Plan version to test: 0.40.0
