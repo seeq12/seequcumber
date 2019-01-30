@@ -62,9 +62,13 @@ Usage information
 
 Examples:
 
+```
 seequcumber --testPlan --featureDir "./dir"
+```
 
+```
 seequcumber --testReport --testPlanFilename "./myTestPlan.csv" --featureDir "/dir"
+```
 
 ## Feature File Formatting
 
