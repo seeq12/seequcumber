@@ -1,0 +1,37 @@
+{
+   "compilerOptions": {
+      "target": "es2016",
+      "module": "commonjs",
+      "outDir": "dist",
+      "rootDir": "src",
+      "declaration": true,
+      "sourceMap": true,
+      "esModuleInterop": true,
+
+      /* Strict Type-Checking Options */
+      "noImplicitAny": true,
+      "strictNullChecks": false,
+      "strictFunctionTypes": true,
+      "strictPropertyInitialization": false,
+      "noImplicitThis": true,
+      "alwaysStrict": true,
+
+      /* Additional Checks */
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "noImplicitReturns": true,
+      "noFallthroughCasesInSwitch": true,
+
+      /* Debugging Options */
+      "traceResolution": false,
+      "listEmittedFiles": false,
+      "listFiles": false,
+      "pretty": true,
+
+      "lib": ["es2016"],
+      "types": ["node", "Long", "jest"],
+      "typeRoots": ["node_modules/@types"]
+   },
+   "include": ["src/**/*.ts"],
+   "exclude": ["node_modules/**", "dist/**"]
+}

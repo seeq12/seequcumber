@@ -1,1 +1,16 @@
 node_modules
+dist
+test
+test_results
+src/**.js
+.idea/*
+.vscode/*
+
+coverage
+.nyc_output
+*.log
+
+yarn.lock
+
+/seequcumber.iml
+
