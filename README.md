@@ -24,13 +24,13 @@ $ npm install seequcumber
 Seequcumber CLI has two primary options:
 
 ```
-testPlan
+seequcumber --testPlan
 ```
 
 Creates a new Test Plan from a directory of Gherkin files. Once the blank template is generated, it can be found in the current directory as a csv file. It's easily editable to add more required test cases ([example](/test_data/test_plans/Story-1-TestPlan.csv)).
 
 ```
-testReport
+seequcumber --testReport
 ```
 
 Creates a new Test Report from a Test Plan and directory of Gherkin files. Once generated, the html report can be found in the current directory.
@@ -62,8 +62,8 @@ Usage information
 
 Examples:
 
---testPlan --featureDir "./dir"
---testReport --testPlanFilename "./myTestPlan.csv" --featureDir "/dir"
+seequcumber --testPlan --featureDir "./dir"
+seequcumber --testReport --testPlanFilename "./myTestPlan.csv" --featureDir "/dir"
 
 ## Feature File Formatting
 
